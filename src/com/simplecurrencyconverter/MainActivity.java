@@ -23,13 +23,14 @@ public class MainActivity extends Activity {
     private EditText getKrwEditText() { return (EditText) findViewById(R.id.krw_amount); }
     private EditText getEurEditText() { return (EditText) findViewById(R.id.eur_amount); }
 
-    private final DecimalFormat amountFormatter = getAmountFormatter();
-    private DecimalFormat getAmountFormatter() {
+    private final DecimalFormat inputAmountFormatter = getAmountFormatter("###,###.##");
+    private final DecimalFormat outputAmountFormatter = getAmountFormatter("###,##0.00");
+    private DecimalFormat getAmountFormatter(String formatPattern) {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
         symbols.setGroupingSeparator(' ');
-        return new DecimalFormat("###,##0.00", symbols);
+        return new DecimalFormat(formatPattern, symbols);
     }
-    private final String emptyAmount = "0.00";
+    private final String emptyAmount = "0";
 
     private boolean ignoreAmountUpdate = false;
 
@@ -63,7 +64,7 @@ public class MainActivity extends Activity {
                 if (!hasFocus) {
                     EditText editText = (EditText) v;
                     BigDecimal amount = parseDecimal(editText.getText().toString());
-                    String formattedOutputAmount = formatAmount(amount);
+                    String formattedOutputAmount = formatAmount(amount, inputAmountFormatter);
                     ignoreAmountUpdate = true;
                     editText.setText(formattedOutputAmount);
                 }
@@ -82,15 +83,21 @@ public class MainActivity extends Activity {
         BigDecimal multiplier = hasKrwChanged ? ONE_WON_IN_EUROS : ONE_EURO_IN_WONS;
         EditText textToChange = hasKrwChanged ? getEurEditText() : getKrwEditText();
 
-        BigDecimal inputAmount = parseDecimal(changedText.toString());
-        BigDecimal outputAmount = inputAmount.multiply(multiplier).setScale(2, RoundingMode.HALF_EVEN);
-        String formattedOutputAmount = formatAmount(outputAmount);
+        String formattedOutputAmount;
+        if (changedText.toString().length() == 0) {
+            formattedOutputAmount = "";
+        }
+        else {
+            BigDecimal inputAmount = parseDecimal(changedText.toString());
+            BigDecimal outputAmount = inputAmount.multiply(multiplier).setScale(2, RoundingMode.HALF_EVEN);
+            formattedOutputAmount = formatAmount(outputAmount, outputAmountFormatter);
+        }
         textToChange.setText(formattedOutputAmount);
     }
 
     private BigDecimal parseDecimal(String s) {
         try {
-            BigDecimal decimal = new BigDecimal(amountFormatter.parse(s).doubleValue());
+            BigDecimal decimal = new BigDecimal(inputAmountFormatter.parse(s).doubleValue());
             return decimal;
         }
         catch (NumberFormatException e) {
@@ -101,8 +108,8 @@ public class MainActivity extends Activity {
         }
     }
 
-    private String formatAmount(BigDecimal amount) {
-        String formattedValue = amountFormatter.format(amount.doubleValue());
+    private String formatAmount(BigDecimal amount, DecimalFormat formatter) {
+        String formattedValue = formatter.format(amount.doubleValue());
         return formattedValue.equals(emptyAmount) ? "" : formattedValue;
     }
 
