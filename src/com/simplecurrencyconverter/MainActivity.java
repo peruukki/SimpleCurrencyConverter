@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
     }
     private final String emptyAmount = "0";
 
-    private boolean ignoreAmountUpdate = false;
+    private boolean allowAmountUpdate = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,8 @@ public class MainActivity extends Activity {
                     EditText editText = (EditText) v;
                     BigDecimal amount = parseDecimal(editText.getText().toString());
                     String formattedOutputAmount = formatAmount(amount, inputAmountFormatter);
-                    ignoreAmountUpdate = true;
+                    // Empty the other amount too if the amount that lost focus was emptied
+                    allowAmountUpdate = formattedOutputAmount.length() == 0;
                     editText.setText(formattedOutputAmount);
                 }
             }
@@ -73,11 +74,11 @@ public class MainActivity extends Activity {
     }
 
     private void updateAmounts(Editable changedText) {
-        if (ignoreAmountUpdate) {
-            ignoreAmountUpdate = false;
+        if (!allowAmountUpdate) {
+            allowAmountUpdate = true;
             return;
         }
-        ignoreAmountUpdate = true;
+        allowAmountUpdate = false;
 
         boolean hasKrwChanged = changedText.equals(getKrwEditText().getText());
         BigDecimal multiplier = hasKrwChanged ? ONE_WON_IN_EUROS : ONE_EURO_IN_WONS;
