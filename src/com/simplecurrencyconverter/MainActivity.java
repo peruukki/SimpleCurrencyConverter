@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.widget.EditText;
 
 public class MainActivity extends Activity {
@@ -38,6 +40,9 @@ public class MainActivity extends Activity {
 
         addAmountChangedListeners(getKrwEditText());
         addAmountChangedListeners(getEurEditText());
+
+        addFocusChangedListener(getKrwEditText());
+        addFocusChangedListener(getEurEditText());
     }
 
     private void addAmountChangedListeners(EditText editText) {
@@ -48,6 +53,21 @@ public class MainActivity extends Activity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+    }
+
+    private void addFocusChangedListener(EditText editText) {
+        editText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    EditText editText = (EditText) v;
+                    BigDecimal amount = parseDecimal(editText.getText().toString());
+                    String formattedOutputAmount = formatAmount(amount);
+                    ignoreAmountUpdate = true;
+                    editText.setText(formattedOutputAmount);
+                }
+            }
         });
     }
 
