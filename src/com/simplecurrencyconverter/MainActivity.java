@@ -62,12 +62,7 @@ public class MainActivity extends Activity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    EditText editText = (EditText) v;
-                    BigDecimal amount = parseDecimal(editText.getText().toString());
-                    String formattedOutputAmount = formatAmount(amount, inputAmountFormatter);
-                    // Empty the other amount too if the amount that lost focus was emptied
-                    allowAmountUpdate = formattedOutputAmount.length() == 0;
-                    editText.setText(formattedOutputAmount);
+                    updateLostFocusAmount((EditText) v);
                 }
             }
         });
@@ -94,6 +89,14 @@ public class MainActivity extends Activity {
             formattedOutputAmount = formatAmount(outputAmount, outputAmountFormatter);
         }
         textToChange.setText(formattedOutputAmount);
+    }
+
+    private void updateLostFocusAmount(EditText editText) {
+        BigDecimal amount = parseDecimal(editText.getText().toString());
+        String formattedOutputAmount = formatAmount(amount, inputAmountFormatter);
+        // Empty the other amount too if the amount that lost focus was emptied
+        allowAmountUpdate = formattedOutputAmount.length() == 0;
+        editText.setText(formattedOutputAmount);
     }
 
     private BigDecimal parseDecimal(String s) {
