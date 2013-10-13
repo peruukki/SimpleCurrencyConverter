@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -39,11 +40,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        addAmountChangedListeners(getKrwEditText());
-        addAmountChangedListeners(getEurEditText());
-
-        addFocusChangedListener(getKrwEditText());
-        addFocusChangedListener(getEurEditText());
+        for (EditText amountField: Arrays.asList(getKrwEditText(), getEurEditText())) {
+            addAmountChangedListeners(amountField);
+            addFocusChangedListener(amountField);
+        }
     }
 
     private void addAmountChangedListeners(EditText editText) {
