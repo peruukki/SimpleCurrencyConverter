@@ -2,6 +2,9 @@ package com.simplecurrencyconverter;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -51,8 +54,9 @@ public class MainActivity extends Activity {
         EditText textToChange = hasKrwChanged ? getEurEditText() : getKrwEditText();
 
         BigDecimal inputAmount = parseDecimal(changedText.toString());
-        String outputAmount = inputAmount.multiply(multiplier).setScale(2, RoundingMode.HALF_EVEN).toString();
-        textToChange.setText(outputAmount.equals("0.00") ? "" : outputAmount);
+        BigDecimal outputAmount = inputAmount.multiply(multiplier).setScale(2, RoundingMode.HALF_EVEN);
+        String formattedOutputAmount = formatAmount(outputAmount);
+        textToChange.setText(formattedOutputAmount);
     }
 
     private BigDecimal parseDecimal(String s) {
@@ -63,6 +67,14 @@ public class MainActivity extends Activity {
         catch (NumberFormatException e) {
             return new BigDecimal(0);
         }
+    }
+
+    private String formatAmount(BigDecimal amount) {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+        symbols.setGroupingSeparator(' ');
+        DecimalFormat formatter = new DecimalFormat("###,##0.00", symbols);
+        String formattedValue = formatter.format(amount.doubleValue());
+        return formattedValue.equals("0.00") ? "" : formattedValue;
     }
 
     @Override
