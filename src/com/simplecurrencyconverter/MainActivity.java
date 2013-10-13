@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -19,6 +20,14 @@ public class MainActivity extends Activity {
 
     private EditText getKrwEditText() { return (EditText) findViewById(R.id.krw_amount); }
     private EditText getEurEditText() { return (EditText) findViewById(R.id.eur_amount); }
+
+    private final DecimalFormat amountFormatter = getAmountFormatter();
+    private DecimalFormat getAmountFormatter() {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+        symbols.setGroupingSeparator(' ');
+        return new DecimalFormat("###,##0.00", symbols);
+    }
+    private final String emptyAmount = "0.00";
 
     private boolean ignoreAmountUpdate = false;
 
@@ -61,20 +70,20 @@ public class MainActivity extends Activity {
 
     private BigDecimal parseDecimal(String s) {
         try {
-            BigDecimal decimal = new BigDecimal(s);
+            BigDecimal decimal = new BigDecimal(amountFormatter.parse(s).doubleValue());
             return decimal;
         }
         catch (NumberFormatException e) {
             return new BigDecimal(0);
         }
+        catch (ParseException e) {
+            return new BigDecimal(0);
+        }
     }
 
     private String formatAmount(BigDecimal amount) {
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
-        symbols.setGroupingSeparator(' ');
-        DecimalFormat formatter = new DecimalFormat("###,##0.00", symbols);
-        String formattedValue = formatter.format(amount.doubleValue());
-        return formattedValue.equals("0.00") ? "" : formattedValue;
+        String formattedValue = amountFormatter.format(amount.doubleValue());
+        return formattedValue.equals(emptyAmount) ? "" : formattedValue;
     }
 
     @Override
