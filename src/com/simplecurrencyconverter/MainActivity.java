@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
     private void addAmountChangedListeners(EditText editText) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void afterTextChanged(Editable s) { updateAmounts(s); }
+            public void afterTextChanged(Editable s) { updateOtherAmount(s); }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
@@ -73,7 +73,7 @@ public class MainActivity extends Activity {
         });
     }
 
-    private void updateAmounts(Editable changedText) {
+    private void updateOtherAmount(Editable changedText) {
         if (!allowAmountUpdate) {
             allowAmountUpdate = true;
             return;
