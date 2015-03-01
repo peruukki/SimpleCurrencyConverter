@@ -101,8 +101,7 @@ public class MainActivity extends Activity {
 
     private BigDecimal parseDecimal(String s) {
         try {
-            BigDecimal decimal = new BigDecimal(inputAmountFormatter.parse(s).doubleValue());
-            return decimal;
+            return new BigDecimal(inputAmountFormatter.parse(s).doubleValue());
         }
         catch (NumberFormatException e) {
             return new BigDecimal(0);
