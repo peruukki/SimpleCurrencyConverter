@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -40,16 +39,20 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        for (EditText amountField: Arrays.asList(getKrwEditText(), getEurEditText())) {
-            addAmountChangedListeners(amountField);
-            addFocusChangedListener(amountField);
-        }
+        EditText krwEditText = getKrwEditText();
+        EditText eurEditText = getEurEditText();
+
+        addAmountChangedListeners(krwEditText, eurEditText, ONE_WON_IN_EUROS);
+        addFocusChangedListener(krwEditText);
+
+        addAmountChangedListeners(eurEditText, krwEditText, ONE_EURO_IN_WONS);
+        addFocusChangedListener(eurEditText);
     }
 
-    private void addAmountChangedListeners(EditText editText) {
+    private void addAmountChangedListeners(final EditText editText, final EditText otherEditText, final BigDecimal multiplier) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void afterTextChanged(Editable s) { updateOtherAmount(s); }
+            public void afterTextChanged(Editable s) { updateOtherAmount(s, otherEditText, multiplier); }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
@@ -68,16 +71,12 @@ public class MainActivity extends Activity {
         });
     }
 
-    private void updateOtherAmount(Editable changedText) {
+    private void updateOtherAmount(Editable changedText, EditText editTextToChange, BigDecimal multiplier) {
         if (!allowAmountUpdate) {
             allowAmountUpdate = true;
             return;
         }
         allowAmountUpdate = false;
-
-        boolean hasKrwChanged = changedText.equals(getKrwEditText().getText());
-        BigDecimal multiplier = hasKrwChanged ? ONE_WON_IN_EUROS : ONE_EURO_IN_WONS;
-        EditText textToChange = hasKrwChanged ? getEurEditText() : getKrwEditText();
 
         String formattedOutputAmount;
         if (changedText.toString().length() == 0) {
@@ -88,7 +87,7 @@ public class MainActivity extends Activity {
             BigDecimal outputAmount = inputAmount.multiply(multiplier).setScale(2, RoundingMode.HALF_EVEN);
             formattedOutputAmount = formatAmount(outputAmount, outputAmountFormatter);
         }
-        textToChange.setText(formattedOutputAmount);
+        editTextToChange.setText(formattedOutputAmount);
     }
 
     private void updateLostFocusAmount(EditText editText) {
