@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TabHost;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -38,6 +39,23 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        addTabs();
+        addCurrencyListeners();
+    }
+
+    private void addTabs() {
+        TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
+        tabHost.setup();
+
+        tabHost.addTab(tabHost.newTabSpec("fragment_convert")
+            .setIndicator("Convert")
+            .setContent(R.id.convertTab));
+        tabHost.addTab(tabHost.newTabSpec("fragment_currencies")
+            .setIndicator("Currencies")
+            .setContent(R.id.currenciesTab));
+    }
+
+    private void addCurrencyListeners() {
         EditText krwEditText = getKrwEditText();
         EditText eurEditText = getEurEditText();
 
@@ -47,7 +65,6 @@ public class MainActivity extends ActionBarActivity {
         addAmountChangedListeners(eurEditText, krwEditText, ONE_EURO_IN_WONS);
         addFocusChangedListener(eurEditText);
     }
-
 
     private void addAmountChangedListeners(final EditText editText, final EditText otherEditText, final BigDecimal multiplier) {
         editText.addTextChangedListener(new TextWatcher() {

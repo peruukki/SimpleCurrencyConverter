@@ -1,38 +1,48 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/krw_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:text="@string/krw_label" />
-
-    <EditText
-        android:id="@+id/krw_amount"
+    <TabHost
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/krw_label"
-        android:hint="@string/edit_amount_default"
-        android:inputType="numberDecimal" />
+        android:layout_height="fill_parent"
+        android:id="@+id/tabHost">
 
-    <TextView
-        android:id="@+id/eur_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/krw_amount"
-        android:text="@string/eur_label" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/eur_amount"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/eur_label"
-        android:hint="@string/edit_amount_default"
-        android:inputType="numberDecimal" />
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"></TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin">
+
+                <include
+                    android:id="@+id/convertTab"
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    layout="@layout/fragment_convert">
+                </include>
+                <include
+                    android:id="@+id/currenciesTab"
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    layout="@layout/fragment_currencies">
+                </include>
+
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
 
 </RelativeLayout>

@@ -5,4 +5,6 @@
     <string name="eur_label">EUR</string>
     <string name="edit_amount_default">0</string>
 
+    <string name="currencies">Edit currencies here</string>
+
 </resources>

@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/convertTab"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    tools:context="com.simplecurrencyconverter.fragments.ConvertFragment">
+
+    <TextView
+        android:id="@+id/krw_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="@string/krw_label" />
+
+    <EditText
+        android:id="@+id/krw_amount"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/krw_label"
+        android:hint="@string/edit_amount_default"
+        android:inputType="numberDecimal" />
+
+    <TextView
+        android:id="@+id/eur_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/krw_amount"
+        android:text="@string/eur_label" />
+
+    <EditText
+        android:id="@+id/eur_amount"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eur_label"
+        android:hint="@string/edit_amount_default"
+        android:inputType="numberDecimal" />
+
+</RelativeLayout>
