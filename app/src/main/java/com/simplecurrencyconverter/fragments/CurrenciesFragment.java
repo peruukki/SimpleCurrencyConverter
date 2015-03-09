@@ -13,7 +13,7 @@ import com.simplecurrencyconverter.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CurrenciesFragment.OnFragmentInteractionListener} interface
+ * {@link com.simplecurrencyconverter.fragments.CurrenciesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link CurrenciesFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -68,13 +68,6 @@ public class CurrenciesFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_currencies, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -104,7 +97,6 @@ public class CurrenciesFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onCurrenciesFragmentInteraction(Uri uri);
     }
-
 }
