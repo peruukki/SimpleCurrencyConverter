@@ -24,18 +24,12 @@ import java.util.Locale;
  */
 public class ConvertFragment extends Fragment {
 
-    private final DecimalFormat inputAmountFormatter = getAmountFormatter("###,###.##");
-    private final DecimalFormat outputAmountFormatter = getAmountFormatter("###,##0.00");
+    private final static String EMPTY_AMOUNT = "0";
 
-    private DecimalFormat getAmountFormatter(String formatPattern) {
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
-        symbols.setGroupingSeparator(' ');
-        return new DecimalFormat(formatPattern, symbols);
-    }
+    private final DecimalFormat mInputAmountFormatter = getAmountFormatter("###,###.##");
+    private final DecimalFormat mOutputAmountFormatter = getAmountFormatter("###,##0.00");
 
-    private final String emptyAmount = "0";
-
-    private boolean allowAmountUpdate = true;
+    private boolean mAllowAmountUpdate = true;
 
     private ConversionRate mConversionRate;
 
@@ -79,11 +73,9 @@ public class ConvertFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 updateOtherAmount(s, otherEditText, multiplier);
             }
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
@@ -102,11 +94,11 @@ public class ConvertFragment extends Fragment {
     }
 
     private void updateOtherAmount(Editable changedText, EditText editTextToChange, BigDecimal multiplier) {
-        if (!allowAmountUpdate) {
-            allowAmountUpdate = true;
+        if (!mAllowAmountUpdate) {
+            mAllowAmountUpdate = true;
             return;
         }
-        allowAmountUpdate = false;
+        mAllowAmountUpdate = false;
 
         String formattedOutputAmount;
         if (changedText.toString().length() == 0) {
@@ -115,22 +107,22 @@ public class ConvertFragment extends Fragment {
         else {
             BigDecimal inputAmount = parseDecimal(changedText.toString());
             BigDecimal outputAmount = inputAmount.multiply(multiplier).setScale(2, RoundingMode.HALF_EVEN);
-            formattedOutputAmount = formatAmount(outputAmount, outputAmountFormatter);
+            formattedOutputAmount = formatAmount(outputAmount, mOutputAmountFormatter);
         }
         editTextToChange.setText(formattedOutputAmount);
     }
 
     private void updateLostFocusAmount(EditText editText) {
         BigDecimal amount = parseDecimal(editText.getText().toString());
-        String formattedOutputAmount = formatAmount(amount, inputAmountFormatter);
+        String formattedOutputAmount = formatAmount(amount, mInputAmountFormatter);
         // Empty the other amount too if the amount that lost focus was emptied
-        allowAmountUpdate = formattedOutputAmount.length() == 0;
+        mAllowAmountUpdate = formattedOutputAmount.length() == 0;
         editText.setText(formattedOutputAmount);
     }
 
     private BigDecimal parseDecimal(String s) {
         try {
-            return new BigDecimal(inputAmountFormatter.parse(s).doubleValue());
+            return new BigDecimal(mInputAmountFormatter.parse(s).doubleValue());
         }
         catch (NumberFormatException e) {
             return new BigDecimal(0);
@@ -142,6 +134,12 @@ public class ConvertFragment extends Fragment {
 
     private String formatAmount(BigDecimal amount, DecimalFormat formatter) {
         String formattedValue = formatter.format(amount.doubleValue());
-        return formattedValue.equals(emptyAmount) ? "" : formattedValue;
+        return formattedValue.equals(EMPTY_AMOUNT) ? "" : formattedValue;
+    }
+
+    private DecimalFormat getAmountFormatter(String formatPattern) {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+        symbols.setGroupingSeparator(' ');
+        return new DecimalFormat(formatPattern, symbols);
     }
 }
