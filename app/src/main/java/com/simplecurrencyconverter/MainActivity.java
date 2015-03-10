@@ -1,10 +1,13 @@
 package com.simplecurrencyconverter;
 
+import android.content.Context;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.simplecurrencyconverter.adapters.TabAdapter;
 import com.simplecurrencyconverter.fragments.ConvertFragment;
@@ -56,6 +59,7 @@ public class MainActivity extends ActionBarActivity
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+                hideKeyboard();
                 mViewPager.setCurrentItem(tab.getPosition());
             }
             @Override
@@ -70,6 +74,15 @@ public class MainActivity extends ActionBarActivity
             actionBar.addTab(actionBar.newTab()
                 .setText(tab.getTitle())
                 .setTabListener(tabListener));
+        }
+    }
+
+    private void hideKeyboard() {
+        // From http://stackoverflow.com/a/7696791
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
