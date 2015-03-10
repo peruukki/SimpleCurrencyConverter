@@ -25,11 +25,11 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mConvertTab = ConvertFragment.newInstance(null, null);
+        mConvertTab = new ConvertFragment();
 
         List<Tab> tabs = new ArrayList<>();
         tabs.add(new Tab(getString(R.string.tab_convert), mConvertTab));
-        tabs.add(new Tab(getString(R.string.tab_currencies), CurrenciesFragment.newInstance(null, null)));
+        tabs.add(new Tab(getString(R.string.tab_currencies), new CurrenciesFragment()));
         addTabs(tabs);
     }
 

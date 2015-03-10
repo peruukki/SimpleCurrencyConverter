@@ -13,55 +13,21 @@ import com.simplecurrencyconverter.utils.ConversionRate;
 import java.math.BigDecimal;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link com.simplecurrencyconverter.fragments.CurrenciesFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CurrenciesFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A {@link Fragment} that contains widgets to select currently used currencies.
  */
 public class CurrenciesFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CurrenciesFragment.
+     * Creates an instance of the fragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static CurrenciesFragment newInstance(String param1, String param2) {
-        CurrenciesFragment fragment = new CurrenciesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public CurrenciesFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
         mListener.onCurrenciesFragmentInteraction(new ConversionRate(
             getString(R.string.eur_label), getString(R.string.krw_label),
             new BigDecimal(1209.15))
@@ -71,7 +37,6 @@ public class CurrenciesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_currencies, container, false);
     }
 
