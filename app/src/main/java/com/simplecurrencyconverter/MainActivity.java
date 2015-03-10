@@ -20,6 +20,8 @@ public class MainActivity extends ActionBarActivity
 
     private ConvertFragment mConvertTab;
 
+    private ViewPager mViewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,12 +37,12 @@ public class MainActivity extends ActionBarActivity
 
     private void addTabs(List<Tab> tabs) {
         final TabAdapter tabPagerAdapter = new TabAdapter(getSupportFragmentManager(), tabs);
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final ActionBar actionBar = getSupportActionBar();
+        mViewPager = (ViewPager) findViewById(R.id.pager);
 
         // Add swipe views
-        viewPager.setAdapter(tabPagerAdapter);
-        viewPager.setOnPageChangeListener(
+        mViewPager.setAdapter(tabPagerAdapter);
+        mViewPager.setOnPageChangeListener(
             new ViewPager.SimpleOnPageChangeListener() {
                 @Override
                 public void onPageSelected(int position) {
@@ -54,7 +56,7 @@ public class MainActivity extends ActionBarActivity
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-                viewPager.setCurrentItem(tab.getPosition());
+                mViewPager.setCurrentItem(tab.getPosition());
             }
             @Override
             public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
@@ -74,5 +76,6 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onCurrenciesFragmentInteraction(ConversionRate selectedConversionRate) {
         mConvertTab.setConversionRate(selectedConversionRate);
+        mViewPager.setCurrentItem(0);
     }
 }
