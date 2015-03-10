@@ -3,6 +3,9 @@ package com.simplecurrencyconverter.utils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * A container class for two currencies and their conversion rate.
+ */
 public class ConversionRate {
 
     private String mFixedCurrency;

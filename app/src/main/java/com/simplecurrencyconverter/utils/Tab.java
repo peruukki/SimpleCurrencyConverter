@@ -2,13 +2,16 @@ package com.simplecurrencyconverter.utils;
 
 import android.support.v4.app.Fragment;
 
+/**
+ * A container class for a tab's title and content Fragment.
+ */
 public class Tab {
 
     private Fragment mContent;
     private String mTitle;
 
     /**
-     * A container for tab title and its content Fragment.
+     * Creates a container for a tab's title and content Fragment.
      *
      * @param title  the tab title
      * @param content  the tab content Fragment
