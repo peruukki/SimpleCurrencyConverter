@@ -120,9 +120,10 @@ public class ConvertFragment extends Fragment {
         editText.setText(formattedOutputAmount);
     }
 
-    private BigDecimal parseDecimal(String s) {
+    private BigDecimal parseDecimal(String amount) {
+        String trimmedAmount = amount.replaceAll(" ", "");
         try {
-            return new BigDecimal(mInputAmountFormatter.parse(s).doubleValue());
+            return new BigDecimal(mInputAmountFormatter.parse(trimmedAmount).doubleValue());
         }
         catch (NumberFormatException e) {
             return new BigDecimal(0);
