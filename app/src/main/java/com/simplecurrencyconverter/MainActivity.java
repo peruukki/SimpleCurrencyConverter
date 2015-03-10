@@ -1,6 +1,5 @@
 package com.simplecurrencyconverter;
 
-import android.net.Uri;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -17,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends ActionBarActivity
-    implements ConvertFragment.OnFragmentInteractionListener,
-               CurrenciesFragment.OnFragmentInteractionListener {
+    implements CurrenciesFragment.OnFragmentInteractionListener {
 
     private ConvertFragment mConvertTab;
 
@@ -76,9 +74,5 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onCurrenciesFragmentInteraction(ConversionRate selectedConversionRate) {
         mConvertTab.setConversionRate(selectedConversionRate);
-    }
-
-    @Override
-    public void onConvertFragmentInteraction(Uri uri) {
     }
 }
