@@ -1,7 +1,6 @@
 package com.simplecurrencyconverter.fragments;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.simplecurrencyconverter.R;
+import com.simplecurrencyconverter.utils.ConversionRate;
+
+import java.math.BigDecimal;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +21,7 @@ import com.simplecurrencyconverter.R;
  * create an instance of this fragment.
  */
 public class CurrenciesFragment extends Fragment {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -59,6 +62,10 @@ public class CurrenciesFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mListener.onCurrenciesFragmentInteraction(new ConversionRate(
+            getString(R.string.eur_label), getString(R.string.krw_label),
+            new BigDecimal(1209.15))
+        );
     }
 
     @Override
@@ -96,7 +103,6 @@ public class CurrenciesFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onCurrenciesFragmentInteraction(Uri uri);
+        public void onCurrenciesFragmentInteraction(ConversionRate selectedConversionRate);
     }
 }

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import com.simplecurrencyconverter.adapters.TabAdapter;
 import com.simplecurrencyconverter.fragments.ConvertFragment;
 import com.simplecurrencyconverter.fragments.CurrenciesFragment;
+import com.simplecurrencyconverter.utils.ConversionRate;
 import com.simplecurrencyconverter.utils.Tab;
 
 import java.util.ArrayList;
@@ -19,13 +20,17 @@ public class MainActivity extends ActionBarActivity
     implements ConvertFragment.OnFragmentInteractionListener,
                CurrenciesFragment.OnFragmentInteractionListener {
 
+    private ConvertFragment mConvertTab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mConvertTab = ConvertFragment.newInstance(null, null);
+
         List<Tab> tabs = new ArrayList<>();
-        tabs.add(new Tab(getString(R.string.tab_convert), ConvertFragment.newInstance(null, null)));
+        tabs.add(new Tab(getString(R.string.tab_convert), mConvertTab));
         tabs.add(new Tab(getString(R.string.tab_currencies), CurrenciesFragment.newInstance(null, null)));
         addTabs(tabs);
     }
@@ -69,7 +74,8 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onCurrenciesFragmentInteraction(Uri uri) {
+    public void onCurrenciesFragmentInteraction(ConversionRate selectedConversionRate) {
+        mConvertTab.setConversionRate(selectedConversionRate);
     }
 
     @Override

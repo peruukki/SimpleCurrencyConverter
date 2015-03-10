@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.simplecurrencyconverter.R;
+import com.simplecurrencyconverter.utils.ConversionRate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -30,9 +31,6 @@ import java.util.Locale;
  */
 public class ConvertFragment extends Fragment {
 
-    private static final BigDecimal ONE_EURO_IN_WONS = new BigDecimal(1452.62594);
-    private static final BigDecimal ONE_WON_IN_EUROS = new BigDecimal(1).divide(ONE_EURO_IN_WONS, 5, RoundingMode.HALF_EVEN);
-
     private final DecimalFormat inputAmountFormatter = getAmountFormatter("###,###.##");
     private final DecimalFormat outputAmountFormatter = getAmountFormatter("###,##0.00");
 
@@ -45,6 +43,8 @@ public class ConvertFragment extends Fragment {
     private final String emptyAmount = "0";
 
     private boolean allowAmountUpdate = true;
+
+    private ConversionRate mConversionRate;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -78,6 +78,11 @@ public class ConvertFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public void setConversionRate(ConversionRate conversionRate) {
+        mConversionRate = conversionRate;
+        addCurrencyListeners(getView());
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,9 +96,7 @@ public class ConvertFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_convert, container, false);
-        addCurrencyListeners(view);
-        return view;
+        return inflater.inflate(R.layout.fragment_convert, container, false);
     }
 
     @Override
@@ -117,10 +120,10 @@ public class ConvertFragment extends Fragment {
         EditText krwEditText = (EditText) view.findViewById(R.id.krw_amount);
         EditText eurEditText = (EditText) view.findViewById(R.id.eur_amount);
 
-        addAmountChangedListeners(krwEditText, eurEditText, ONE_WON_IN_EUROS);
+        addAmountChangedListeners(krwEditText, eurEditText, mConversionRate.getFixedCurrencyInVariableCurrencyRate());
         addFocusChangedListener(krwEditText);
 
-        addAmountChangedListeners(eurEditText, krwEditText, ONE_EURO_IN_WONS);
+        addAmountChangedListeners(eurEditText, krwEditText, mConversionRate.getVariableCurrencyInFixedCurrencyRate());
         addFocusChangedListener(eurEditText);
     }
 
