@@ -65,4 +65,9 @@ public class ConversionRate {
     public BigDecimal getVariableCurrencyInFixedCurrencyRate() {
         return mVariableCurrencyInFixedCurrencyRate;
     }
+
+    @Override
+    public String toString() {
+        return getVariableCurrency() + " <-> " + getFixedCurrency();
+    }
 }

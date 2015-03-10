@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.simplecurrencyconverter.R;
 import com.simplecurrencyconverter.utils.ConversionRate;
@@ -47,31 +48,53 @@ public class ConvertFragment extends Fragment {
      */
     public void setConversionRate(ConversionRate conversionRate) {
         mConversionRate = conversionRate;
-        addCurrencyListeners(getView());
+
+        View view = getView();
+        updateLabels(view);
+        clearAmounts(view);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_convert, container, false);
+        View view = inflater.inflate(R.layout.fragment_convert, container, false);
+        addCurrencyListeners(view);
+        return view;
+    }
+
+    private void updateLabels(View view) {
+        TextView firstLabel = (TextView) view.findViewById(R.id.first_currency_label);
+        firstLabel.setText(mConversionRate.getVariableCurrency());
+
+        TextView secondLabel = (TextView) view.findViewById(R.id.second_currency_label);
+        secondLabel.setText(mConversionRate.getFixedCurrency());
+    }
+
+    private void clearAmounts(View view) {
+        EditText firstAmount = (EditText) view.findViewById(R.id.first_currency_amount);
+        firstAmount.setText("");
+
+        EditText secondAmount = (EditText) view.findViewById(R.id.second_currency_amount);
+        secondAmount.setText("");
     }
 
     private void addCurrencyListeners(View view) {
-        EditText krwEditText = (EditText) view.findViewById(R.id.krw_amount);
-        EditText eurEditText = (EditText) view.findViewById(R.id.eur_amount);
+        EditText firstAmount = (EditText) view.findViewById(R.id.first_currency_amount);
+        EditText secondAmount = (EditText) view.findViewById(R.id.second_currency_amount);
 
-        addAmountChangedListeners(krwEditText, eurEditText, mConversionRate.getFixedCurrencyInVariableCurrencyRate());
-        addFocusChangedListener(krwEditText);
+        addAmountChangedListeners(firstAmount, secondAmount, false);
+        addFocusChangedListener(firstAmount);
 
-        addAmountChangedListeners(eurEditText, krwEditText, mConversionRate.getVariableCurrencyInFixedCurrencyRate());
-        addFocusChangedListener(eurEditText);
+        addAmountChangedListeners(secondAmount, firstAmount, true);
+        addFocusChangedListener(secondAmount);
     }
 
-    private void addAmountChangedListeners(final EditText editText, final EditText otherEditText, final BigDecimal multiplier) {
+    private void addAmountChangedListeners(final EditText editText, final EditText otherEditText,
+                                           final boolean isFixedCurrency) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                updateOtherAmount(s, otherEditText, multiplier);
+                updateOtherAmount(s, otherEditText, isFixedCurrency);
             }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -93,7 +116,8 @@ public class ConvertFragment extends Fragment {
         });
     }
 
-    private void updateOtherAmount(Editable changedText, EditText editTextToChange, BigDecimal multiplier) {
+    private void updateOtherAmount(Editable changedText, EditText editTextToChange,
+                                   boolean isFixedCurrency) {
         if (!mAllowAmountUpdate) {
             mAllowAmountUpdate = true;
             return;
@@ -105,6 +129,9 @@ public class ConvertFragment extends Fragment {
             formattedOutputAmount = "";
         }
         else {
+            BigDecimal multiplier = isFixedCurrency ?
+                mConversionRate.getFixedCurrencyInVariableCurrencyRate() :
+                mConversionRate.getVariableCurrencyInFixedCurrencyRate();
             BigDecimal inputAmount = parseDecimal(changedText.toString());
             BigDecimal outputAmount = inputAmount.multiply(multiplier).setScale(2, RoundingMode.HALF_EVEN);
             formattedOutputAmount = formatAmount(outputAmount, mOutputAmountFormatter);

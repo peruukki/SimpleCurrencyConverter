@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Simple Currency Converter</string>
-    <string name="krw_label">KRW</string>
     <string name="eur_label">EUR</string>
+    <string name="cny_label">CNY</string>
+    <string name="hkd_label">HKD</string>
+    <string name="krw_label">KRW</string>
+    <string name="mop_label">MOP</string>
     <string name="edit_amount_default">0</string>
     <string name="currencies">Edit currencies here</string>
     <string name="tab_convert">Convert</string>

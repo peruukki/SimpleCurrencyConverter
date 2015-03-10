@@ -8,32 +8,33 @@
     tools:context="com.simplecurrencyconverter.fragments.ConvertFragment">
 
     <TextView
-        android:id="@+id/krw_label"
+        android:id="@+id/first_currency_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:text="@string/krw_label" />
+        android:layout_alignParentStart="true"
+        />
 
     <EditText
-        android:id="@+id/krw_amount"
+        android:id="@+id/first_currency_amount"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/krw_label"
+        android:layout_below="@id/first_currency_label"
         android:hint="@string/edit_amount_default"
         android:inputType="numberDecimal" />
 
     <TextView
-        android:id="@+id/eur_label"
+        android:id="@+id/second_currency_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/krw_amount"
-        android:text="@string/eur_label" />
+        android:layout_below="@id/first_currency_amount"
+        />
 
     <EditText
-        android:id="@+id/eur_amount"
+        android:id="@+id/second_currency_amount"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/eur_label"
+        android:layout_below="@id/second_currency_label"
         android:hint="@string/edit_amount_default"
         android:inputType="numberDecimal" />
 
