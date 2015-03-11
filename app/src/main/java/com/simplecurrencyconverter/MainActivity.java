@@ -1,6 +1,8 @@
 package com.simplecurrencyconverter;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -12,7 +14,6 @@ import android.view.inputmethod.InputMethodManager;
 import com.simplecurrencyconverter.adapters.TabAdapter;
 import com.simplecurrencyconverter.fragments.ConvertFragment;
 import com.simplecurrencyconverter.fragments.CurrenciesFragment;
-import com.simplecurrencyconverter.utils.ConversionRate;
 import com.simplecurrencyconverter.utils.Tab;
 
 import java.util.ArrayList;
@@ -30,11 +31,19 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mConvertTab = new ConvertFragment();
-
         List<Tab> tabs = new ArrayList<>();
+        Fragment currenciesTab;
+        if (savedInstanceState == null) {
+            mConvertTab = new ConvertFragment();
+            currenciesTab = new CurrenciesFragment();
+        } else {
+            FragmentManager fm = getSupportFragmentManager();
+            List<Fragment> existingTabs = fm.getFragments();
+            mConvertTab = (ConvertFragment) existingTabs.get(0);
+            currenciesTab = existingTabs.get(1);
+        }
         tabs.add(new Tab(getString(R.string.tab_convert), mConvertTab));
-        tabs.add(new Tab(getString(R.string.tab_currencies), new CurrenciesFragment()));
+        tabs.add(new Tab(getString(R.string.tab_currencies), currenciesTab));
         addTabs(tabs);
     }
 
@@ -87,8 +96,8 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onCurrenciesFragmentInteraction(ConversionRate selectedConversionRate) {
-        mConvertTab.setConversionRate(selectedConversionRate);
+    public void onCurrenciesUpdated() {
+        mConvertTab.updateConversionRate();
         mViewPager.setCurrentItem(0);
     }
 }

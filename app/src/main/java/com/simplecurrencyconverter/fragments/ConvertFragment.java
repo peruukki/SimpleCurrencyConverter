@@ -1,5 +1,7 @@
 package com.simplecurrencyconverter.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -12,9 +14,8 @@ import android.widget.TextView;
 
 import com.simplecurrencyconverter.R;
 import com.simplecurrencyconverter.utils.ConversionRate;
+import com.simplecurrencyconverter.utils.Currencies;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
@@ -41,13 +42,10 @@ public class ConvertFragment extends Fragment {
     }
 
     /**
-     * Sets the conversion rate and currencies to show.
-     *
-     * @param conversionRate  a {@link com.simplecurrencyconverter.utils.ConversionRate} object that
-     *                        contains the currencies and their conversion rate.
+     * Updates the conversion rate and currencies to show from shared preferences.
      */
-    public void setConversionRate(ConversionRate conversionRate) {
-        mConversionRate = conversionRate;
+    public void updateConversionRate() {
+        mConversionRate = readConversionRate();
 
         View view = getView();
         updateLabels(view);
@@ -58,8 +56,24 @@ public class ConvertFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_convert, container, false);
+        mConversionRate = readConversionRate();
+        updateLabels(view);
         addCurrencyListeners(view);
         return view;
+    }
+
+    private ConversionRate readConversionRate() {
+        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+        ConversionRate defaultRate = Currencies.CONVERSION_RATES.get(0);
+        String fixedCurrency = preferences.getString(getString(R.string.fixed_currency_key),
+            defaultRate.getFixedCurrency());
+        String variableCurrency = preferences.getString(getString(R.string.variable_currency_key),
+            defaultRate.getVariableCurrency());
+        Float rate = preferences.getFloat(getString(R.string.conversion_rate_key),
+            defaultRate.getFixedCurrencyInVariableCurrencyRate());
+
+        return new ConversionRate(fixedCurrency, variableCurrency, rate);
     }
 
     private void updateLabels(View view) {
@@ -129,38 +143,35 @@ public class ConvertFragment extends Fragment {
             formattedOutputAmount = "";
         }
         else {
-            BigDecimal multiplier = isFixedCurrency ?
+            Float multiplier = isFixedCurrency ?
                 mConversionRate.getFixedCurrencyInVariableCurrencyRate() :
                 mConversionRate.getVariableCurrencyInFixedCurrencyRate();
-            BigDecimal inputAmount = parseDecimal(changedText.toString());
-            BigDecimal outputAmount = inputAmount.multiply(multiplier).setScale(2, RoundingMode.HALF_EVEN);
+            Float inputAmount = parseDecimal(changedText.toString());
+            Float outputAmount = multiplier * inputAmount;
             formattedOutputAmount = formatAmount(outputAmount, mOutputAmountFormatter);
         }
         editTextToChange.setText(formattedOutputAmount);
     }
 
     private void updateLostFocusAmount(EditText editText) {
-        BigDecimal amount = parseDecimal(editText.getText().toString());
+        Float amount = parseDecimal(editText.getText().toString());
         String formattedOutputAmount = formatAmount(amount, mInputAmountFormatter);
         // Empty the other amount too if the amount that lost focus was emptied
         mAllowAmountUpdate = formattedOutputAmount.length() == 0;
         editText.setText(formattedOutputAmount);
     }
 
-    private BigDecimal parseDecimal(String amount) {
+    private Float parseDecimal(String amount) {
         String trimmedAmount = amount.replaceAll(" ", "");
         try {
-            return new BigDecimal(mInputAmountFormatter.parse(trimmedAmount).doubleValue());
+            return mInputAmountFormatter.parse(trimmedAmount).floatValue();
         }
-        catch (NumberFormatException e) {
-            return new BigDecimal(0);
-        }
-        catch (ParseException e) {
-            return new BigDecimal(0);
+        catch (NumberFormatException | ParseException e) {
+            return 0f;
         }
     }
 
-    private String formatAmount(BigDecimal amount, DecimalFormat formatter) {
+    private String formatAmount(Float amount, DecimalFormat formatter) {
         String formattedValue = formatter.format(amount.doubleValue());
         return formattedValue.equals(EMPTY_AMOUNT) ? "" : formattedValue;
     }

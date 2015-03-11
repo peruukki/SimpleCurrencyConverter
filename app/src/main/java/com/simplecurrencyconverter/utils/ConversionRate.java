@@ -1,8 +1,5 @@
 package com.simplecurrencyconverter.utils;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 /**
  * A container class for two currencies and their conversion rate.
  */
@@ -11,8 +8,8 @@ public class ConversionRate {
     private String mFixedCurrency;
     private String mVariableCurrency;
 
-    private BigDecimal mFixedCurrencyInVariableCurrencyRate;
-    private BigDecimal mVariableCurrencyInFixedCurrencyRate;
+    private Float mFixedCurrencyInVariableCurrencyRate;
+    private Float mVariableCurrencyInFixedCurrencyRate;
 
     /**
      * Creates a conversion rate mapping between two currencies.
@@ -21,11 +18,11 @@ public class ConversionRate {
      * @param variableCurrency  the name of the currency whose value is the conversion rate
      * @param rate the value of one unit of the fixed currency in the variable currency
      */
-    public ConversionRate(String fixedCurrency, String variableCurrency, BigDecimal rate) {
+    public ConversionRate(String fixedCurrency, String variableCurrency, Float rate) {
         mFixedCurrency = fixedCurrency;
         mVariableCurrency = variableCurrency;
         mFixedCurrencyInVariableCurrencyRate = rate;
-        mVariableCurrencyInFixedCurrencyRate = new BigDecimal(1).divide(rate, 5, RoundingMode.HALF_EVEN);
+        mVariableCurrencyInFixedCurrencyRate = 1 / rate;
     }
 
     /**
@@ -52,7 +49,7 @@ public class ConversionRate {
      *
      * @return the value of one unit of the fixed currency in the variable currency
      */
-    public BigDecimal getFixedCurrencyInVariableCurrencyRate() {
+    public Float getFixedCurrencyInVariableCurrencyRate() {
         return mFixedCurrencyInVariableCurrencyRate;
     }
 
@@ -62,7 +59,7 @@ public class ConversionRate {
      *
      * @return the value of one unit of the variable currency in the fixed currency
      */
-    public BigDecimal getVariableCurrencyInFixedCurrencyRate() {
+    public Float getVariableCurrencyInFixedCurrencyRate() {
         return mVariableCurrencyInFixedCurrencyRate;
     }
 
