@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.simplecurrencyconverter.R;
 import com.simplecurrencyconverter.utils.ConversionRate;
-import com.simplecurrencyconverter.utils.Currencies;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -65,7 +64,7 @@ public class ConvertFragment extends Fragment {
     private ConversionRate readConversionRate() {
         SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
 
-        ConversionRate defaultRate = Currencies.CONVERSION_RATES.get(0);
+        ConversionRate defaultRate = ConversionRate.ALL.get(0);
         String fixedCurrency = preferences.getString(getString(R.string.fixed_currency_key),
             defaultRate.getFixedCurrency());
         String variableCurrency = preferences.getString(getString(R.string.variable_currency_key),

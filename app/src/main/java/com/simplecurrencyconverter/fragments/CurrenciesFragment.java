@@ -14,7 +14,6 @@ import android.widget.ListView;
 
 import com.simplecurrencyconverter.R;
 import com.simplecurrencyconverter.utils.ConversionRate;
-import com.simplecurrencyconverter.utils.Currencies;
 
 /**
  * A {@link Fragment} that contains widgets to select currently used currencies.
@@ -35,7 +34,7 @@ public class CurrenciesFragment extends ListFragment {
 
         setListAdapter(new ArrayAdapter<>(getActivity(),
             R.layout.list_item_currencies, R.id.list_item_currencies_textview,
-            Currencies.CONVERSION_RATES));
+            ConversionRate.ALL));
     }
 
     @Override

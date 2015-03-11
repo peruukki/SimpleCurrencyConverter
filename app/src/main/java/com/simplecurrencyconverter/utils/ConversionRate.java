@@ -1,9 +1,24 @@
 package com.simplecurrencyconverter.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * A container class for two currencies and their conversion rate.
  */
 public class ConversionRate {
+
+    private static ConversionRate[] CONVERSION_RATES = {
+        new ConversionRate("EUR", "KRW", 1209.15f),
+        new ConversionRate("EUR", "HKD", 8.33f),
+        new ConversionRate("EUR", "MOP", 8.58f),
+        new ConversionRate("EUR", "CNY", 6.73f)
+    };
+
+    /**
+     * A list of all available currency pairs and their conversion rates.
+     */
+    public static List<ConversionRate> ALL = Arrays.asList(CONVERSION_RATES);
 
     private String mFixedCurrency;
     private String mVariableCurrency;
