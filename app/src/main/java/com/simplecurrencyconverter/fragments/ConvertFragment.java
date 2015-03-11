@@ -64,15 +64,14 @@ public class ConvertFragment extends Fragment {
     private ConversionRate readConversionRate() {
         SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
 
-        ConversionRate defaultRate = ConversionRate.ALL.get(0);
+        ConversionRate defaultRate = ConversionRate.DEFAULT;
         String fixedCurrency = preferences.getString(getString(R.string.fixed_currency_key),
             defaultRate.getFixedCurrency());
         String variableCurrency = preferences.getString(getString(R.string.variable_currency_key),
             defaultRate.getVariableCurrency());
-        Float rate = preferences.getFloat(getString(R.string.conversion_rate_key),
-            defaultRate.getFixedCurrencyInVariableCurrencyRate());
 
-        return new ConversionRate(fixedCurrency, variableCurrency, rate);
+        ConversionRate storedConversionRate = ConversionRate.fromCurrencies(fixedCurrency, variableCurrency);
+        return storedConversionRate != null ? storedConversionRate : defaultRate;
     }
 
     private void updateLabels(View view) {

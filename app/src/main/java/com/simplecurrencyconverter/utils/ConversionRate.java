@@ -1,5 +1,7 @@
 package com.simplecurrencyconverter.utils;
 
+import android.util.Log;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -7,6 +9,8 @@ import java.util.List;
  * A container class for two currencies and their conversion rate.
  */
 public class ConversionRate {
+
+    private static final String LOG_TAG = ConversionRate.class.getSimpleName();
 
     private static ConversionRate[] CONVERSION_RATES = {
         new ConversionRate("EUR", "KRW", 1209.15f),
@@ -19,6 +23,29 @@ public class ConversionRate {
      * A list of all available currency pairs and their conversion rates.
      */
     public static List<ConversionRate> ALL = Arrays.asList(CONVERSION_RATES);
+
+    /**
+     * The default conversion rate.
+     */
+    public static ConversionRate DEFAULT = ALL.get(0);
+
+    /**
+     * Creates a ConversionRate instance from a known currency pair.
+     *
+     * @param fixedCurrency  a known fixed currency
+     * @param variableCurrency  a known variable currency
+     * @return a ConversionRate instance or null if the given currency pair is unknown
+     */
+    public static ConversionRate fromCurrencies(String fixedCurrency, String variableCurrency) {
+        for (ConversionRate conversionRate : CONVERSION_RATES) {
+            if (fixedCurrency.equals(conversionRate.getFixedCurrency()) &&
+                variableCurrency.equals(conversionRate.getVariableCurrency())) {
+                return conversionRate;
+            }
+        }
+        Log.w(LOG_TAG, "Unknown currency pair: " + fixedCurrency + " <-> " + variableCurrency);
+        return null;
+    }
 
     private String mFixedCurrency;
     private String mVariableCurrency;

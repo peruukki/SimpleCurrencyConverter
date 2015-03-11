@@ -76,7 +76,6 @@ public class CurrenciesFragment extends ListFragment {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(getString(R.string.fixed_currency_key), conversionRate.getFixedCurrency());
         editor.putString(getString(R.string.variable_currency_key), conversionRate.getVariableCurrency());
-        editor.putFloat(getString(R.string.conversion_rate_key), conversionRate.getFixedCurrencyInVariableCurrencyRate());
         editor.commit();
     }
 
