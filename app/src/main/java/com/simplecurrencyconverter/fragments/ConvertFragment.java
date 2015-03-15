@@ -1,7 +1,5 @@
 package com.simplecurrencyconverter.fragments;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -14,6 +12,7 @@ import android.widget.TextView;
 
 import com.simplecurrencyconverter.R;
 import com.simplecurrencyconverter.utils.ConversionRate;
+import com.simplecurrencyconverter.utils.Settings;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -44,7 +43,7 @@ public class ConvertFragment extends Fragment {
      * Updates the conversion rate and currencies to show from shared preferences.
      */
     public void updateConversionRate() {
-        mConversionRate = readConversionRate();
+        mConversionRate = Settings.readConversionRate(this);
 
         View view = getView();
         updateLabels(view);
@@ -55,23 +54,10 @@ public class ConvertFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_convert, container, false);
-        mConversionRate = readConversionRate();
+        mConversionRate = Settings.readConversionRate(this);
         updateLabels(view);
         addCurrencyListeners(view);
         return view;
-    }
-
-    private ConversionRate readConversionRate() {
-        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-
-        ConversionRate defaultRate = ConversionRate.DEFAULT;
-        String fixedCurrency = preferences.getString(getString(R.string.fixed_currency_key),
-            defaultRate.getFixedCurrency());
-        String variableCurrency = preferences.getString(getString(R.string.variable_currency_key),
-            defaultRate.getVariableCurrency());
-
-        ConversionRate storedConversionRate = ConversionRate.fromCurrencies(fixedCurrency, variableCurrency);
-        return storedConversionRate != null ? storedConversionRate : defaultRate;
     }
 
     private void updateLabels(View view) {

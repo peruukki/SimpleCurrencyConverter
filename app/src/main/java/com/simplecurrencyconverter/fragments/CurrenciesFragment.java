@@ -1,8 +1,6 @@
 package com.simplecurrencyconverter.fragments;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -14,6 +12,7 @@ import android.widget.ListView;
 
 import com.simplecurrencyconverter.R;
 import com.simplecurrencyconverter.utils.ConversionRate;
+import com.simplecurrencyconverter.utils.Settings;
 
 /**
  * A {@link Fragment} that contains widgets to select currently used currencies.
@@ -66,17 +65,9 @@ public class CurrenciesFragment extends ListFragment {
 
         if (mListener != null) {
             ConversionRate conversionRate = (ConversionRate) l.getItemAtPosition(position);
-            writeConversionRate(conversionRate);
+            Settings.writeConversionRate(this, conversionRate);
             mListener.onCurrenciesUpdated();
         }
-    }
-
-    private void writeConversionRate(ConversionRate conversionRate) {
-        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(getString(R.string.fixed_currency_key), conversionRate.getFixedCurrency());
-        editor.putString(getString(R.string.variable_currency_key), conversionRate.getVariableCurrency());
-        editor.commit();
     }
 
     /**
