@@ -43,6 +43,22 @@ public class CurrenciesFragment extends ListFragment {
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setCurrentItemSelected(getListView(), Settings.readConversionRate(this));
+    }
+
+    private void setCurrentItemSelected(ListView listView, ConversionRate selectedConversionRate) {
+        int itemCount = listView.getCount();
+        for (int i = 0; i < itemCount; i++) {
+            ConversionRate rate = (ConversionRate) listView.getItemAtPosition(i);
+            if (rate.equals(selectedConversionRate)) {
+                listView.setItemChecked(i, true);
+            }
+        }
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
@@ -62,6 +78,7 @@ public class CurrenciesFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+        l.setItemChecked(position, true);
 
         if (mListener != null) {
             ConversionRate conversionRate = (ConversionRate) l.getItemAtPosition(position);
