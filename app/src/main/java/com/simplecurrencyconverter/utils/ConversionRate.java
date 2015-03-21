@@ -105,6 +105,26 @@ public class ConversionRate {
         return mVariableCurrencyInFixedCurrencyRate;
     }
 
+    /**
+     * Returns a string representation of the variable currency value that equals one unit of the
+     * fixed currency.
+     *
+     * @return a string describing the variable currency value that equals one unit of the fixed
+     *         currency
+     */
+    public String getVariableCurrencyRateString() {
+        return getFixedCurrencyInVariableCurrencyRate().toString() + " " + getVariableCurrency();
+    }
+
+    /**
+     * Returns a string representation of one unit of the fixed currency.
+     *
+     * @return a string describing one unit of the fixed currency
+     */
+    public String getFixedCurrencyRateString() {
+        return "1 " + getFixedCurrency();
+    }
+
     @Override
     public String toString() {
         return getVariableCurrency() + " <-> " + getFixedCurrency();

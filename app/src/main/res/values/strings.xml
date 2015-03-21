@@ -6,6 +6,8 @@
     <string name="tab_convert">Convert</string>
     <string name="tab_currencies">Currencies</string>
 
+    <string name="rate_separator">&lt;-&gt;</string>
+
     <string name="fixed_currency_key">fixed_currency</string>
     <string name="variable_currency_key">variable_currency</string>
 </resources>

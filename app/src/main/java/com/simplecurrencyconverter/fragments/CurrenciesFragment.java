@@ -7,10 +7,10 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.simplecurrencyconverter.R;
+import com.simplecurrencyconverter.adapters.ConversionRateListAdapter;
 import com.simplecurrencyconverter.utils.ConversionRate;
 import com.simplecurrencyconverter.utils.Settings;
 
@@ -31,8 +31,8 @@ public class CurrenciesFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setListAdapter(new ArrayAdapter<>(getActivity(),
-            R.layout.list_item_currencies, R.id.list_item_currencies_textview,
+        setListAdapter(new ConversionRateListAdapter(getActivity(),
+            R.layout.list_item_currencies, R.id.list_item_currency_view,
             ConversionRate.ALL));
     }
 
