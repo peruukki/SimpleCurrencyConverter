@@ -31,6 +31,8 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        hideActionBar();
+
         List<Tab> tabs = new ArrayList<>();
         Fragment currenciesTab;
         if (savedInstanceState == null) {
@@ -45,6 +47,10 @@ public class MainActivity extends ActionBarActivity
         tabs.add(new Tab(getString(R.string.tab_convert), mConvertTab));
         tabs.add(new Tab(getString(R.string.tab_currencies), currenciesTab));
         addTabs(tabs);
+    }
+
+    private void hideActionBar() {
+        getSupportActionBar().setTitle("");
     }
 
     private void addTabs(List<Tab> tabs) {
