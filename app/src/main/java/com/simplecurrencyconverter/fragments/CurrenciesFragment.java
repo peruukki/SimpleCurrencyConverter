@@ -1,6 +1,8 @@
 package com.simplecurrencyconverter.fragments;
 
 import android.app.Activity;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -13,6 +15,8 @@ import com.simplecurrencyconverter.R;
 import com.simplecurrencyconverter.adapters.ConversionRateListAdapter;
 import com.simplecurrencyconverter.models.ConversionRate;
 import com.simplecurrencyconverter.utils.Settings;
+
+import java.util.List;
 
 /**
  * A {@link Fragment} that contains widgets to select currently used currencies.
@@ -30,22 +34,13 @@ public class CurrenciesFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setListAdapter(new ConversionRateListAdapter(getActivity(),
-            R.layout.list_item_currencies, R.id.list_item_currency_view,
-            ConversionRate.ALL));
+        new ReadConversionRatesTask().execute(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_currencies, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setCurrentItemSelected(getListView(), Settings.readConversionRate(this));
     }
 
     private void setCurrentItemSelected(ListView listView, ConversionRate selectedConversionRate) {
@@ -82,8 +77,29 @@ public class CurrenciesFragment extends ListFragment {
 
         if (mListener != null) {
             ConversionRate conversionRate = (ConversionRate) l.getItemAtPosition(position);
-            Settings.writeConversionRate(this, conversionRate);
+            Settings.writeConversionRate(getActivity(), conversionRate);
             mListener.onCurrenciesUpdated();
+        }
+    }
+
+    private class ReadConversionRatesTask extends AsyncTask<Context, Void, List<ConversionRate>> {
+
+        @Override
+        protected List<ConversionRate> doInBackground(Context... params) {
+            Context context = params[0];
+            List<ConversionRate> conversionRates = ConversionRate.readConversionRates(context);
+            if (conversionRates.isEmpty()) {
+                conversionRates = ConversionRate.writeInitialConversionRates(context);
+            }
+            return conversionRates;
+        }
+
+        @Override
+        protected void onPostExecute(List<ConversionRate> conversionRates) {
+            Activity activity = getActivity();
+            setListAdapter(new ConversionRateListAdapter(activity, R.layout.list_item_currencies,
+                R.id.list_item_currency_view, conversionRates));
+            setCurrentItemSelected(getListView(), Settings.readConversionRate(activity));
         }
     }
 

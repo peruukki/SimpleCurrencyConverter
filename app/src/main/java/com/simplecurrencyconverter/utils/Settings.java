@@ -1,34 +1,34 @@
 package com.simplecurrencyconverter.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v4.app.Fragment;
 
 import com.simplecurrencyconverter.R;
 import com.simplecurrencyconverter.models.ConversionRate;
 
 public class Settings {
 
-    public static ConversionRate readConversionRate(Fragment fragment) {
-        SharedPreferences preferences = fragment.getActivity().getPreferences(Context.MODE_PRIVATE);
+    public static ConversionRate readConversionRate(Activity activity) {
+        SharedPreferences preferences = activity.getPreferences(Context.MODE_PRIVATE);
         ConversionRate defaultRate = ConversionRate.DEFAULT;
 
-        String fixedCurrency = preferences.getString(fragment.getString(R.string.fixed_currency_key),
+        String fixedCurrency = preferences.getString(activity.getString(R.string.fixed_currency_key),
             defaultRate.getFixedCurrency());
-        String variableCurrency = preferences.getString(fragment.getString(R.string.variable_currency_key),
+        String variableCurrency = preferences.getString(activity.getString(R.string.variable_currency_key),
             defaultRate.getVariableCurrency());
-        Float rate = preferences.getFloat(fragment.getString(R.string.conversion_rate_key),
+        Float rate = preferences.getFloat(activity.getString(R.string.conversion_rate_key),
             defaultRate.getFixedCurrencyInVariableCurrencyRate());
 
         return new ConversionRate(fixedCurrency, variableCurrency, rate);
     }
 
-    public static void writeConversionRate(Fragment fragment, ConversionRate conversionRate) {
-        SharedPreferences preferences = fragment.getActivity().getPreferences(Context.MODE_PRIVATE);
+    public static void writeConversionRate(Activity activity, ConversionRate conversionRate) {
+        SharedPreferences preferences = activity.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(fragment.getString(R.string.fixed_currency_key), conversionRate.getFixedCurrency());
-        editor.putString(fragment.getString(R.string.variable_currency_key), conversionRate.getVariableCurrency());
-        editor.putFloat(fragment.getString(R.string.conversion_rate_key),
+        editor.putString(activity.getString(R.string.fixed_currency_key), conversionRate.getFixedCurrency());
+        editor.putString(activity.getString(R.string.variable_currency_key), conversionRate.getVariableCurrency());
+        editor.putFloat(activity.getString(R.string.conversion_rate_key),
             conversionRate.getFixedCurrencyInVariableCurrencyRate());
         editor.commit();
     }

@@ -43,7 +43,7 @@ public class ConvertFragment extends Fragment {
      * Updates the conversion rate and currencies to show from shared preferences.
      */
     public void updateConversionRate() {
-        mConversionRate = Settings.readConversionRate(this);
+        mConversionRate = Settings.readConversionRate(getActivity());
 
         View view = getView();
         updateLabels(view);
@@ -54,7 +54,7 @@ public class ConvertFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_convert, container, false);
-        mConversionRate = Settings.readConversionRate(this);
+        mConversionRate = Settings.readConversionRate(getActivity());
         updateLabels(view);
         addCurrencyListeners(view);
         return view;
