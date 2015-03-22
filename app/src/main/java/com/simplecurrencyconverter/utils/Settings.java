@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 
 import com.simplecurrencyconverter.R;
+import com.simplecurrencyconverter.models.ConversionRate;
 
 public class Settings {
 

@@ -11,7 +11,7 @@ import android.widget.ListView;
 
 import com.simplecurrencyconverter.R;
 import com.simplecurrencyconverter.adapters.ConversionRateListAdapter;
-import com.simplecurrencyconverter.utils.ConversionRate;
+import com.simplecurrencyconverter.models.ConversionRate;
 import com.simplecurrencyconverter.utils.Settings;
 
 /**

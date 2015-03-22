@@ -1,4 +1,4 @@
-package com.simplecurrencyconverter.utils;
+package com.simplecurrencyconverter.models;
 
 import android.util.Log;
 

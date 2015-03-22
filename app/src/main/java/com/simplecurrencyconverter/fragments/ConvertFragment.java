@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.simplecurrencyconverter.R;
-import com.simplecurrencyconverter.utils.ConversionRate;
+import com.simplecurrencyconverter.models.ConversionRate;
 import com.simplecurrencyconverter.utils.Settings;
 
 import java.text.DecimalFormat;

@@ -8,13 +8,13 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.simplecurrencyconverter.R;
-import com.simplecurrencyconverter.utils.ConversionRate;
+import com.simplecurrencyconverter.models.ConversionRate;
 
 import java.util.List;
 
 /**
  * An {@link android.widget.ArrayAdapter} that renders
- * {@link com.simplecurrencyconverter.utils.ConversionRate} items.
+ * {@link com.simplecurrencyconverter.models.ConversionRate} items.
  */
 public class ConversionRateListAdapter extends ArrayAdapter<ConversionRate> {
 
