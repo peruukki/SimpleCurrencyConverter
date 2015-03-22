@@ -109,4 +109,14 @@ public class ConversionRate {
     public String toString() {
         return getVariableCurrency() + " <-> " + getFixedCurrency();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof ConversionRate) && (toString().equals(o.toString()));
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
 }
