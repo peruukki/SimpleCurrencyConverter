@@ -10,4 +10,5 @@
 
     <string name="fixed_currency_key">fixed_currency</string>
     <string name="variable_currency_key">variable_currency</string>
+    <string name="conversion_rate_key">conversion_rate</string>
 </resources>

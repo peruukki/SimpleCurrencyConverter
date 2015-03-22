@@ -11,15 +11,16 @@ public class Settings {
 
     public static ConversionRate readConversionRate(Fragment fragment) {
         SharedPreferences preferences = fragment.getActivity().getPreferences(Context.MODE_PRIVATE);
-
         ConversionRate defaultRate = ConversionRate.DEFAULT;
+
         String fixedCurrency = preferences.getString(fragment.getString(R.string.fixed_currency_key),
             defaultRate.getFixedCurrency());
         String variableCurrency = preferences.getString(fragment.getString(R.string.variable_currency_key),
             defaultRate.getVariableCurrency());
+        Float rate = preferences.getFloat(fragment.getString(R.string.conversion_rate_key),
+            defaultRate.getFixedCurrencyInVariableCurrencyRate());
 
-        ConversionRate storedConversionRate = ConversionRate.fromCurrencies(fixedCurrency, variableCurrency);
-        return storedConversionRate != null ? storedConversionRate : defaultRate;
+        return new ConversionRate(fixedCurrency, variableCurrency, rate);
     }
 
     public static void writeConversionRate(Fragment fragment, ConversionRate conversionRate) {
@@ -27,6 +28,8 @@ public class Settings {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(fragment.getString(R.string.fixed_currency_key), conversionRate.getFixedCurrency());
         editor.putString(fragment.getString(R.string.variable_currency_key), conversionRate.getVariableCurrency());
+        editor.putFloat(fragment.getString(R.string.conversion_rate_key),
+            conversionRate.getFixedCurrencyInVariableCurrencyRate());
         editor.commit();
     }
 
