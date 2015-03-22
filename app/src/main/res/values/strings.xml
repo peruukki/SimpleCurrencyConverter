@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Simple Currency Converter</string>
+    <string name="app_name">Currency Converter</string>
 
     <string name="edit_amount_default">0</string>
 
