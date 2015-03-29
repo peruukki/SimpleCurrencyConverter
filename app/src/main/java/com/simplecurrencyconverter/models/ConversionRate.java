@@ -79,6 +79,7 @@ public class ConversionRate {
                 conversionRate.getFixedCurrencyInVariableCurrencyRate());
             db.insert(ConversionRateEntry.TABLE_NAME, null, values);
         }
+        db.close();
 
         return ALL;
     }
