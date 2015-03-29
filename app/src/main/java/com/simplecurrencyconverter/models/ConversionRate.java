@@ -161,6 +161,23 @@ public class ConversionRate {
         return "1 " + getFixedCurrency();
     }
 
+    /**
+     * Updates the conversion rate in the database.
+     *
+     * @param db  the {@link android.database.sqlite.SQLiteDatabase} instance to use for writing
+     */
+    public void writeToDb(SQLiteDatabase db) {
+        ContentValues values = new ContentValues();
+        values.put(ConversionRateEntry.COLUMN_FIXED_CURRENCY, getFixedCurrency());
+        values.put(ConversionRateEntry.COLUMN_VARIABLE_CURRENCY, getVariableCurrency());
+        values.put(ConversionRateEntry.COLUMN_CONVERSION_RATE, getFixedCurrencyInVariableCurrencyRate());
+
+        String whereClause = ConversionRateEntry.COLUMN_FIXED_CURRENCY + "=?" + " AND " +
+            ConversionRateEntry.COLUMN_VARIABLE_CURRENCY + "=?";
+        String[] whereArgs = { getFixedCurrency(), getVariableCurrency() };
+        db.update(ConversionRateEntry.TABLE_NAME, values, whereClause, whereArgs);
+    }
+
     @Override
     public String toString() {
         return getVariableCurrency() + " <-> " + getFixedCurrency();

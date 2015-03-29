@@ -5,6 +5,7 @@
 
     <string name="tab_convert">Convert</string>
     <string name="tab_currencies">Currencies</string>
+    <string name="update_conversion_rates">Update Conversion Rates</string>
 
     <string name="rate_separator">&lt;-&gt;</string>
 

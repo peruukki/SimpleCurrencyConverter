@@ -6,14 +6,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.simplecurrencyconverter.R;
 import com.simplecurrencyconverter.adapters.ConversionRateListAdapter;
 import com.simplecurrencyconverter.models.ConversionRate;
+import com.simplecurrencyconverter.network.FetchConversionRatesTask;
 import com.simplecurrencyconverter.utils.Settings;
 
 import java.util.List;
@@ -21,7 +24,9 @@ import java.util.List;
 /**
  * A {@link Fragment} that contains widgets to select currently used currencies.
  */
-public class CurrenciesFragment extends ListFragment {
+public class CurrenciesFragment extends ListFragment implements View.OnClickListener {
+
+    private static String LOG_TAG = CurrenciesFragment.class.getSimpleName();
 
     private OnFragmentInteractionListener mListener;
 
@@ -40,7 +45,10 @@ public class CurrenciesFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_currencies, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_currencies, container, false);
+        Button updateButton = (Button) rootView.findViewById(R.id.button_update_conversion_rates);
+        updateButton.setOnClickListener(this);
+        return rootView;
     }
 
     private void setCurrentItemSelected(ListView listView, ConversionRate selectedConversionRate) {
@@ -80,6 +88,22 @@ public class CurrenciesFragment extends ListFragment {
             Settings.writeConversionRate(getActivity(), conversionRate);
             mListener.onCurrenciesUpdated();
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_update_conversion_rates:
+                updateConversionRates();
+                break;
+            default:
+                Log.e(LOG_TAG, "Unknown view in onClick: " + v);
+        }
+    }
+
+    private void updateConversionRates() {
+        Log.i(LOG_TAG, "Updating conversion rates");
+        new FetchConversionRatesTask().execute(getActivity());
     }
 
     private class ReadConversionRatesTask extends AsyncTask<Context, Void, List<ConversionRate>> {
