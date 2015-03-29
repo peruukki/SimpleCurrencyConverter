@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 import com.simplecurrencyconverter.models.ConversionRate;
 import com.squareup.okhttp.OkHttpClient;
@@ -23,13 +24,26 @@ import java.util.List;
  * The background task to use for fetching updated conversion rates. Updates the rates in the
  * database after fetching.
  */
-public class FetchConversionRatesTask extends AsyncTask<Context, Void, Void> {
+public class FetchConversionRatesTask extends AsyncTask<Void, Void, Void> {
 
     private static String LOG_TAG = FetchConversionRatesTask.class.getSimpleName();
 
+    private Context mContext;
+    private View mUpdateButton;
+
+    /**
+     * Creates a new background task for fetching updated conversion rates.
+     *
+     * @param context  application context
+     * @param updateButton  update button to enable after the data has been fetched
+     */
+    public FetchConversionRatesTask(Context context, View updateButton) {
+        mContext = context;
+        mUpdateButton = updateButton;
+    }
+
     @Override
-    protected Void doInBackground(Context... params) {
-        Context context = params[0];
+    protected Void doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
         Uri uri = Uri.parse("https://query.yahooapis.com/v1/public/yql").buildUpon()
             .appendQueryParameter("q", "select * from yahoo.finance.xchange where pair in (" + getCurrencyPairsForApiQuery() + ")")
@@ -56,7 +70,7 @@ public class FetchConversionRatesTask extends AsyncTask<Context, Void, Void> {
                 Log.d(LOG_TAG, "Parsed conversion rate: " + conversionRate.getFixedCurrencyRateString() +
                     " <-> " + conversionRate.getVariableCurrencyRateString());
             }
-            storeConversionRates(context, conversionRates);
+            storeConversionRates(conversionRates);
 
             responseBody.close();
         } catch (IOException e) {
@@ -101,9 +115,15 @@ public class FetchConversionRatesTask extends AsyncTask<Context, Void, Void> {
         return conversionRates;
     }
 
-    private void storeConversionRates(Context context, List<ConversionRate> conversionRates) {
+    private void storeConversionRates(List<ConversionRate> conversionRates) {
         for (ConversionRate conversionRate : conversionRates) {
-            conversionRate.writeToDb(context.getContentResolver());
+            conversionRate.writeToDb(mContext.getContentResolver());
         }
+    }
+
+    @Override
+    protected void onPostExecute(Void result) {
+        super.onPostExecute(result);
+        mUpdateButton.setEnabled(true);
     }
 }

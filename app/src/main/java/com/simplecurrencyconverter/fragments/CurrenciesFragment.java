@@ -105,16 +105,17 @@ public class CurrenciesFragment extends ListFragment
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_update_conversion_rates:
-                updateConversionRates();
+                updateConversionRates(v);
                 break;
             default:
                 Log.e(LOG_TAG, "Unknown view in onClick: " + v);
         }
     }
 
-    private void updateConversionRates() {
+    private void updateConversionRates(View updateButton) {
         Log.i(LOG_TAG, "Updating conversion rates");
-        new FetchConversionRatesTask().execute(getActivity());
+        updateButton.setEnabled(false);
+        new FetchConversionRatesTask(getActivity(), updateButton).execute();
     }
 
     @Override
