@@ -1,11 +1,14 @@
 package com.simplecurrencyconverter.fragments;
 
 import android.app.Activity;
-import android.content.Context;
-import android.os.AsyncTask;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,20 +18,25 @@ import android.widget.ListView;
 
 import com.simplecurrencyconverter.R;
 import com.simplecurrencyconverter.adapters.ConversionRateListAdapter;
+import com.simplecurrencyconverter.db.ConverterContract;
+import com.simplecurrencyconverter.db.ConverterDbHelper;
 import com.simplecurrencyconverter.models.ConversionRate;
 import com.simplecurrencyconverter.network.FetchConversionRatesTask;
 import com.simplecurrencyconverter.utils.Settings;
 
-import java.util.List;
-
 /**
  * A {@link Fragment} that contains widgets to select currently used currencies.
  */
-public class CurrenciesFragment extends ListFragment implements View.OnClickListener {
+public class CurrenciesFragment extends ListFragment
+    implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static String LOG_TAG = CurrenciesFragment.class.getSimpleName();
+    private static final int CONVERSION_RATES_LOADER_ID = 0;
+
+    private static final String LOG_TAG = CurrenciesFragment.class.getSimpleName();
 
     private OnFragmentInteractionListener mListener;
+
+    private ConversionRateListAdapter mListAdapter;
 
     /**
      * Creates an instance of the fragment.
@@ -39,12 +47,14 @@ public class CurrenciesFragment extends ListFragment implements View.OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new ReadConversionRatesTask().execute(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mListAdapter = new ConversionRateListAdapter(getActivity(), null, 0);
+        setListAdapter(mListAdapter);
+
         View rootView = inflater.inflate(R.layout.fragment_currencies, container, false);
         Button updateButton = (Button) rootView.findViewById(R.id.button_update_conversion_rates);
         updateButton.setOnClickListener(this);
@@ -54,7 +64,8 @@ public class CurrenciesFragment extends ListFragment implements View.OnClickList
     private void setCurrentItemSelected(ListView listView, ConversionRate selectedConversionRate) {
         int itemCount = listView.getCount();
         for (int i = 0; i < itemCount; i++) {
-            ConversionRate rate = (ConversionRate) listView.getItemAtPosition(i);
+            Cursor cursor = (Cursor) listView.getItemAtPosition(i);
+            ConversionRate rate = ConverterDbHelper.conversionRateFromCursor(cursor);
             if (rate.equals(selectedConversionRate)) {
                 listView.setItemChecked(i, true);
             }
@@ -84,8 +95,8 @@ public class CurrenciesFragment extends ListFragment implements View.OnClickList
         l.setItemChecked(position, true);
 
         if (mListener != null) {
-            ConversionRate conversionRate = (ConversionRate) l.getItemAtPosition(position);
-            Settings.writeConversionRate(getActivity(), conversionRate);
+            Cursor cursor = (Cursor) l.getItemAtPosition(position);
+            Settings.writeConversionRate(getActivity(), ConverterDbHelper.conversionRateFromCursor(cursor));
             mListener.onCurrenciesUpdated();
         }
     }
@@ -106,25 +117,26 @@ public class CurrenciesFragment extends ListFragment implements View.OnClickList
         new FetchConversionRatesTask().execute(getActivity());
     }
 
-    private class ReadConversionRatesTask extends AsyncTask<Context, Void, List<ConversionRate>> {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(CONVERSION_RATES_LOADER_ID, null, this);
+    }
 
-        @Override
-        protected List<ConversionRate> doInBackground(Context... params) {
-            Context context = params[0];
-            List<ConversionRate> conversionRates = ConversionRate.readConversionRates(context);
-            if (conversionRates.isEmpty()) {
-                conversionRates = ConversionRate.writeInitialConversionRates(context);
-            }
-            return conversionRates;
-        }
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(), ConverterContract.BASE_CONTENT_URI, null, null, null, null);
+    }
 
-        @Override
-        protected void onPostExecute(List<ConversionRate> conversionRates) {
-            Activity activity = getActivity();
-            setListAdapter(new ConversionRateListAdapter(activity, R.layout.list_item_currencies,
-                R.id.list_item_currency_view, conversionRates));
-            setCurrentItemSelected(getListView(), Settings.readConversionRate(activity));
-        }
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mListAdapter.swapCursor(data);
+        setCurrentItemSelected(getListView(), Settings.readConversionRate(getActivity()));
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mListAdapter.swapCursor(null);
     }
 
     /**

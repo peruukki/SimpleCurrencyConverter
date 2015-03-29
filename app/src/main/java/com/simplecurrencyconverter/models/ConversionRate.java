@@ -1,14 +1,11 @@
 package com.simplecurrencyconverter.models;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
+import com.simplecurrencyconverter.db.ConverterContract;
 import com.simplecurrencyconverter.db.ConverterContract.ConversionRateEntry;
-import com.simplecurrencyconverter.db.ConverterDbHelper;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,56 +30,6 @@ public class ConversionRate {
      * The default conversion rate.
      */
     public static ConversionRate DEFAULT = ALL.get(0);
-
-    /**
-     * Reads all conversion rates from the database.
-     *
-     * @param context the Activity context
-     * @return all conversion rates stored in the database
-     */
-    public static List<ConversionRate> readConversionRates(Context context) {
-        List<ConversionRate> conversionRates = new ArrayList<>();
-
-        ConverterDbHelper dbHelper = new ConverterDbHelper(context);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(ConversionRateEntry.TABLE_NAME, null, null, null, null, null, null);
-
-        while (cursor.moveToNext()) {
-            String fixedCurrency = cursor.getString(
-                cursor.getColumnIndexOrThrow(ConversionRateEntry.COLUMN_FIXED_CURRENCY));
-            String variableCurrency = cursor.getString(
-                cursor.getColumnIndexOrThrow(ConversionRateEntry.COLUMN_VARIABLE_CURRENCY));
-            Float rate = cursor.getFloat(
-                cursor.getColumnIndexOrThrow(ConversionRateEntry.COLUMN_CONVERSION_RATE));
-            conversionRates.add(new ConversionRate(fixedCurrency, variableCurrency, rate));
-        }
-        cursor.close();
-
-        return conversionRates;
-    }
-
-    /**
-     * Writes initial conversion rates to the database.
-     *
-     * @param context the Activity context
-     * @return the initial conversion rates
-     */
-    public static List<ConversionRate> writeInitialConversionRates(Context context) {
-        ConverterDbHelper dbHelper = new ConverterDbHelper(context);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        for (ConversionRate conversionRate : ALL) {
-            ContentValues values = new ContentValues();
-            values.put(ConversionRateEntry.COLUMN_FIXED_CURRENCY, conversionRate.getFixedCurrency());
-            values.put(ConversionRateEntry.COLUMN_VARIABLE_CURRENCY, conversionRate.getVariableCurrency());
-            values.put(ConversionRateEntry.COLUMN_CONVERSION_RATE,
-                conversionRate.getFixedCurrencyInVariableCurrencyRate());
-            db.insert(ConversionRateEntry.TABLE_NAME, null, values);
-        }
-        db.close();
-
-        return ALL;
-    }
 
     private String mFixedCurrency;
     private String mVariableCurrency;
@@ -165,9 +112,9 @@ public class ConversionRate {
     /**
      * Updates the conversion rate in the database.
      *
-     * @param db  the {@link android.database.sqlite.SQLiteDatabase} instance to use for writing
+     * @param contentResolver  the {@link android.content.ContentResolver} instance to use for updating
      */
-    public void writeToDb(SQLiteDatabase db) {
+    public void writeToDb(ContentResolver contentResolver) {
         ContentValues values = new ContentValues();
         values.put(ConversionRateEntry.COLUMN_FIXED_CURRENCY, getFixedCurrency());
         values.put(ConversionRateEntry.COLUMN_VARIABLE_CURRENCY, getVariableCurrency());
@@ -176,7 +123,7 @@ public class ConversionRate {
         String whereClause = ConversionRateEntry.COLUMN_FIXED_CURRENCY + "=?" + " AND " +
             ConversionRateEntry.COLUMN_VARIABLE_CURRENCY + "=?";
         String[] whereArgs = { getFixedCurrency(), getVariableCurrency() };
-        db.update(ConversionRateEntry.TABLE_NAME, values, whereClause, whereArgs);
+        contentResolver.update(ConverterContract.BASE_CONTENT_URI, values, whereClause, whereArgs);
     }
 
     @Override

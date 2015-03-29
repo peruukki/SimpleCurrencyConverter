@@ -1,8 +1,13 @@
 package com.simplecurrencyconverter.db;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 public abstract class ConverterContract {
+
+    private static final String CONTENT_AUTHORITY = "com.simplecurrencyconverter";
+
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     public static final class ConversionRateEntry implements BaseColumns {
         public static final String TABLE_NAME = "conversionRates";

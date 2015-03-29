@@ -1,12 +1,10 @@
 package com.simplecurrencyconverter.network;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.simplecurrencyconverter.db.ConverterDbHelper;
 import com.simplecurrencyconverter.models.ConversionRate;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -104,11 +102,8 @@ public class FetchConversionRatesTask extends AsyncTask<Context, Void, Void> {
     }
 
     private void storeConversionRates(Context context, List<ConversionRate> conversionRates) {
-        SQLiteDatabase db = new ConverterDbHelper(context)
-            .getWritableDatabase();
         for (ConversionRate conversionRate : conversionRates) {
-            conversionRate.writeToDb(db);
+            conversionRate.writeToDb(context.getContentResolver());
         }
-        db.close();
     }
 }
