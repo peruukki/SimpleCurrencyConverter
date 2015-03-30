@@ -22,4 +22,10 @@
         android:text="@string/update_conversion_rates"
         />
 
+    <TextSwitcher
+        android:id="@+id/textswitcher_update_conversion_rates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
 </LinearLayout>

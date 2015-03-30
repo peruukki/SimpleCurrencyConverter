@@ -24,7 +24,7 @@ import java.util.Locale;
  */
 public class ConvertFragment extends Fragment {
 
-    private final static String EMPTY_AMOUNT = "0";
+    private static final String EMPTY_AMOUNT = "0";
 
     private final DecimalFormat mInputAmountFormatter = getAmountFormatter("###,###.##");
     private final DecimalFormat mOutputAmountFormatter = getAmountFormatter("###,##0.00");

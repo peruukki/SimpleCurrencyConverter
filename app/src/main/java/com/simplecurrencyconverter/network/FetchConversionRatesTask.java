@@ -3,8 +3,10 @@ package com.simplecurrencyconverter.network;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextSwitcher;
 
 import com.simplecurrencyconverter.models.ConversionRate;
 import com.squareup.okhttp.OkHttpClient;
@@ -26,20 +28,27 @@ import java.util.List;
  */
 public class FetchConversionRatesTask extends AsyncTask<Void, Void, Void> {
 
-    private static String LOG_TAG = FetchConversionRatesTask.class.getSimpleName();
+    private static final String LOG_TAG = FetchConversionRatesTask.class.getSimpleName();
+
+    private static final long STATUS_RESET_DELAY_MS = 1000;
+
+    private Handler mTimerHandler = new Handler();
 
     private Context mContext;
     private View mUpdateButton;
+    private TextSwitcher mUpdateTextSwitcher;
 
     /**
      * Creates a new background task for fetching updated conversion rates.
      *
      * @param context  application context
      * @param updateButton  update button to enable after the data has been fetched
+     * @param updateTextSwitcher  status text view to update after the data has been fetched
      */
-    public FetchConversionRatesTask(Context context, View updateButton) {
+    public FetchConversionRatesTask(Context context, View updateButton, TextSwitcher updateTextSwitcher) {
         mContext = context;
         mUpdateButton = updateButton;
+        mUpdateTextSwitcher = updateTextSwitcher;
     }
 
     @Override
@@ -124,6 +133,18 @@ public class FetchConversionRatesTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
-        mUpdateButton.setEnabled(true);
+        mUpdateTextSwitcher.setText("Updated.");
+        clearUpdateStatusAfterDelay();
+    }
+
+    private void clearUpdateStatusAfterDelay() {
+        Runnable timerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mUpdateButton.setEnabled(true);
+                mUpdateTextSwitcher.setText("");
+            }
+        };
+        mTimerHandler.postDelayed(timerRunnable, STATUS_RESET_DELAY_MS);
     }
 }

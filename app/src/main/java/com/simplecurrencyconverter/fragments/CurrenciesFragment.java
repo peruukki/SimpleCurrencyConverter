@@ -1,6 +1,7 @@
 package com.simplecurrencyconverter.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,11 +11,17 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextSwitcher;
+import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.simplecurrencyconverter.R;
 import com.simplecurrencyconverter.adapters.ConversionRateListAdapter;
@@ -56,8 +63,25 @@ public class CurrenciesFragment extends ListFragment
         setListAdapter(mListAdapter);
 
         View rootView = inflater.inflate(R.layout.fragment_currencies, container, false);
+
         Button updateButton = (Button) rootView.findViewById(R.id.button_update_conversion_rates);
         updateButton.setOnClickListener(this);
+
+        final Context context = getActivity();
+        TextSwitcher updateText = (TextSwitcher) rootView.findViewById(R.id.textswitcher_update_conversion_rates);
+        Animation in = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
+        Animation out = AnimationUtils.loadAnimation(context, android.R.anim.fade_out);
+        updateText.setInAnimation(in);
+        updateText.setOutAnimation(out);
+        updateText.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                TextView textView = new TextView(context);
+                textView.setGravity(Gravity.CENTER);
+                return textView;
+            }
+        });
+
         return rootView;
     }
 
@@ -114,8 +138,12 @@ public class CurrenciesFragment extends ListFragment
 
     private void updateConversionRates(View updateButton) {
         Log.i(LOG_TAG, "Updating conversion rates");
+
+        TextSwitcher updateText = (TextSwitcher) getActivity().findViewById(R.id.textswitcher_update_conversion_rates);
+        updateText.setText("Fetching conversion rates...");
         updateButton.setEnabled(false);
-        new FetchConversionRatesTask(getActivity(), updateButton).execute();
+
+        new FetchConversionRatesTask(getActivity(), updateButton, updateText).execute();
     }
 
     @Override
