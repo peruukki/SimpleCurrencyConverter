@@ -26,7 +26,7 @@ import java.util.List;
  * The background task to use for fetching updated conversion rates. Updates the rates in the
  * database after fetching.
  */
-public class FetchConversionRatesTask extends AsyncTask<Void, Void, Void> {
+public class FetchConversionRatesTask extends AsyncTask<Void, Void, String> {
 
     private static final String LOG_TAG = FetchConversionRatesTask.class.getSimpleName();
 
@@ -52,7 +52,7 @@ public class FetchConversionRatesTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
+    protected String doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
         Uri uri = Uri.parse("https://query.yahooapis.com/v1/public/yql").buildUpon()
             .appendQueryParameter("q", "select * from yahoo.finance.xchange where pair in (" + getCurrencyPairsForApiQuery() + ")")
@@ -82,10 +82,17 @@ public class FetchConversionRatesTask extends AsyncTask<Void, Void, Void> {
             storeConversionRates(conversionRates);
 
             responseBody.close();
+            return null;
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error fetching conversion rates", e);
+            return "Failed to fetch conversion rates.";
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "Error parsing conversion rates to JSON", e);
+            return "Received unexpected conversion rate data.";
+        } catch (NumberFormatException e) {
+            Log.e(LOG_TAG, "Error converting JSON string to number", e);
+            return "Received invalid conversion rates.";
         }
-        return null;
     }
 
     private String getCurrencyPairsForApiQuery() {
@@ -102,24 +109,18 @@ public class FetchConversionRatesTask extends AsyncTask<Void, Void, Void> {
         return currencyPairs.toString();
     }
 
-    private List<ConversionRate> parseConversionRates(String responseBody) {
-        List<ConversionRate> conversionRates = new ArrayList<>();
-        try {
-            JSONObject responseJson = new JSONObject(responseBody);
-            JSONArray rates = responseJson.getJSONObject("query")
-                .getJSONObject("results")
-                .getJSONArray("rate");
+    private List<ConversionRate> parseConversionRates(String responseBody) throws JSONException {
+        JSONObject responseJson = new JSONObject(responseBody);
+        JSONArray rates = responseJson.getJSONObject("query")
+            .getJSONObject("results")
+            .getJSONArray("rate");
 
-            for (int i = 0; i < rates.length(); i++) {
-                JSONObject rate = rates.getJSONObject(i);
-                String[] currencies = rate.getString("Name").split("/");
-                Float conversionRate = Float.valueOf(rate.getString("Rate"));
-                conversionRates.add(new ConversionRate(currencies[0], currencies[1], conversionRate));
-            }
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, "Error parsing conversion rates to JSON", e);
-        } catch (NumberFormatException e) {
-            Log.e(LOG_TAG, "Error converting JSON string to number", e);
+        List<ConversionRate> conversionRates = new ArrayList<>();
+        for (int i = 0; i < rates.length(); i++) {
+            JSONObject rate = rates.getJSONObject(i);
+            String[] currencies = rate.getString("Name").split("/");
+            Float conversionRate = Float.valueOf(rate.getString("Rate"));
+            conversionRates.add(new ConversionRate(currencies[0], currencies[1], conversionRate));
         }
         return conversionRates;
     }
@@ -131,18 +132,23 @@ public class FetchConversionRatesTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected void onPostExecute(Void result) {
-        super.onPostExecute(result);
-        mUpdateTextSwitcher.setText("Updated.");
-        clearUpdateStatusAfterDelay();
+    protected void onPostExecute(String errorMessage) {
+        super.onPostExecute(errorMessage);
+
+        boolean isError = errorMessage != null;
+        String statusMessage = isError ? errorMessage : "Updated.";
+        mUpdateTextSwitcher.setText(statusMessage);
+        clearUpdateStatusAfterDelay(!isError);
     }
 
-    private void clearUpdateStatusAfterDelay() {
+    private void clearUpdateStatusAfterDelay(final boolean resetStatusText) {
         Runnable timerRunnable = new Runnable() {
             @Override
             public void run() {
                 mUpdateButton.setEnabled(true);
-                mUpdateTextSwitcher.setText("");
+                if (resetStatusText) {
+                    mUpdateTextSwitcher.setText("");
+                }
             }
         };
         mTimerHandler.postDelayed(timerRunnable, STATUS_RESET_DELAY_MS);
