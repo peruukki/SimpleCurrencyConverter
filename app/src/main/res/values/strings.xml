@@ -7,6 +7,12 @@
     <string name="tab_currencies">Currencies</string>
     <string name="update_conversion_rates">Update Conversion Rates</string>
 
+    <string name="fetching_conversion_rates">Fetching conversion rates&#8230;</string>
+    <string name="failed_to_fetch_conversion_rates">Failed to fetch conversion rates.</string>
+    <string name="unexpected_conversion_rate_data">Received unexpected conversion rate data.</string>
+    <string name="invalid_conversion_rates">"Received invalid conversion rates."</string>
+    <string name="updated">Updated.</string>
+
     <string name="rate_separator">&lt;-&gt;</string>
 
     <string name="fixed_currency_key">fixed_currency</string>

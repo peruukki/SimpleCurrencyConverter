@@ -102,8 +102,13 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onCurrenciesUpdated() {
-        mConvertTab.updateConversionRate();
+    public void onCurrenciesSelected() {
+        onConversionRatesUpdated();
         mViewPager.setCurrentItem(0);
+    }
+
+    @Override
+    public void onConversionRatesUpdated() {
+        mConvertTab.updateConversionRate();
     }
 }

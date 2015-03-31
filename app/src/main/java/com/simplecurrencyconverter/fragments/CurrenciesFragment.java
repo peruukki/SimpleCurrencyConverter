@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -31,15 +32,22 @@ import com.simplecurrencyconverter.models.ConversionRate;
 import com.simplecurrencyconverter.network.FetchConversionRatesTask;
 import com.simplecurrencyconverter.utils.Settings;
 
+import java.util.List;
+
 /**
  * A {@link Fragment} that contains widgets to select currently used currencies.
  */
 public class CurrenciesFragment extends ListFragment
-    implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+    implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor>,
+        FetchConversionRatesTask.OnConversionRatesFetchedListener {
+
+    private static final String LOG_TAG = CurrenciesFragment.class.getSimpleName();
 
     private static final int CONVERSION_RATES_LOADER_ID = 0;
 
-    private static final String LOG_TAG = CurrenciesFragment.class.getSimpleName();
+    private static final long STATUS_RESET_DELAY_MS = 1000;
+
+    private Handler mTimerHandler = new Handler();
 
     private OnFragmentInteractionListener mListener;
 
@@ -121,7 +129,7 @@ public class CurrenciesFragment extends ListFragment
         if (mListener != null) {
             Cursor cursor = (Cursor) l.getItemAtPosition(position);
             Settings.writeConversionRate(getActivity(), ConverterDbHelper.conversionRateFromCursor(cursor));
-            mListener.onCurrenciesUpdated();
+            mListener.onCurrenciesSelected();
         }
     }
 
@@ -140,10 +148,10 @@ public class CurrenciesFragment extends ListFragment
         Log.i(LOG_TAG, "Updating conversion rates");
 
         TextSwitcher updateText = (TextSwitcher) getActivity().findViewById(R.id.textswitcher_update_conversion_rates);
-        updateText.setText("Fetching conversion rates...");
+        updateText.setText(getString(R.string.fetching_conversion_rates));
         updateButton.setEnabled(false);
 
-        new FetchConversionRatesTask(getActivity(), updateButton, updateText).execute();
+        new FetchConversionRatesTask(getActivity(), this).execute();
     }
 
     @Override
@@ -168,6 +176,57 @@ public class CurrenciesFragment extends ListFragment
         mListAdapter.swapCursor(null);
     }
 
+    @Override
+    public void onConversionRatesUpdated(List<ConversionRate> conversionRates) {
+        View rootView = getView();
+        if (rootView == null) {
+            Log.e(LOG_TAG, "rootView was null in onConversionRatesUpdated");
+            return;
+        }
+
+        // Find updated rate of currently selected conversion rate
+        ListView listView = getListView();
+        Cursor cursor = (Cursor) listView.getItemAtPosition(listView.getCheckedItemPosition());
+        ConversionRate selectedConversionRate = ConverterDbHelper.conversionRateFromCursor(cursor);
+        ConversionRate updatedConversionRate = conversionRates.get(conversionRates.indexOf(selectedConversionRate));
+
+        // Store updated rate and notify the Convert tab about it
+        Settings.writeConversionRate(getActivity(), updatedConversionRate);
+        mListener.onConversionRatesUpdated();
+
+        // Enable update button and set status text
+        Button updateButton = (Button) rootView.findViewById(R.id.button_update_conversion_rates);
+        updateButton.setEnabled(true);
+        TextSwitcher statusText = (TextSwitcher) rootView.findViewById(R.id.textswitcher_update_conversion_rates);
+        statusText.setText(getString(R.string.updated));
+        clearUpdateStatusAfterDelay(statusText);
+    }
+
+    @Override
+    public void onUpdateFailed(String errorMessage) {
+        View rootView = getView();
+        if (rootView == null) {
+            Log.e(LOG_TAG, "rootView was null in onUpdateFailed");
+            return;
+        }
+
+        // Enable update button and set status text
+        Button updateButton = (Button) rootView.findViewById(R.id.button_update_conversion_rates);
+        updateButton.setEnabled(true);
+        TextSwitcher statusText = (TextSwitcher) rootView.findViewById(R.id.textswitcher_update_conversion_rates);
+        statusText.setText(errorMessage);
+    }
+
+    private void clearUpdateStatusAfterDelay(final TextSwitcher statusText) {
+        Runnable timerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                statusText.setText("");
+            }
+        };
+        mTimerHandler.postDelayed(timerRunnable, STATUS_RESET_DELAY_MS);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -179,6 +238,7 @@ public class CurrenciesFragment extends ListFragment
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public void onCurrenciesUpdated();
+        public void onCurrenciesSelected();
+        public void onConversionRatesUpdated();
     }
 }

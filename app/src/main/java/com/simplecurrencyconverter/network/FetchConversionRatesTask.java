@@ -3,11 +3,9 @@ package com.simplecurrencyconverter.network;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextSwitcher;
 
+import com.simplecurrencyconverter.R;
 import com.simplecurrencyconverter.models.ConversionRate;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -30,25 +28,19 @@ public class FetchConversionRatesTask extends AsyncTask<Void, Void, String> {
 
     private static final String LOG_TAG = FetchConversionRatesTask.class.getSimpleName();
 
-    private static final long STATUS_RESET_DELAY_MS = 1000;
-
-    private Handler mTimerHandler = new Handler();
-
     private Context mContext;
-    private View mUpdateButton;
-    private TextSwitcher mUpdateTextSwitcher;
+    private OnConversionRatesFetchedListener mUpdateListener;
+    private List<ConversionRate> mConversionRates = new ArrayList<>();
 
     /**
      * Creates a new background task for fetching updated conversion rates.
      *
      * @param context  application context
-     * @param updateButton  update button to enable after the data has been fetched
-     * @param updateTextSwitcher  status text view to update after the data has been fetched
+     * @param updateListener  listener to notify after successful fetching
      */
-    public FetchConversionRatesTask(Context context, View updateButton, TextSwitcher updateTextSwitcher) {
+    public FetchConversionRatesTask(Context context, OnConversionRatesFetchedListener updateListener) {
         mContext = context;
-        mUpdateButton = updateButton;
-        mUpdateTextSwitcher = updateTextSwitcher;
+        mUpdateListener = updateListener;
     }
 
     @Override
@@ -80,18 +72,19 @@ public class FetchConversionRatesTask extends AsyncTask<Void, Void, String> {
                     " <-> " + conversionRate.getVariableCurrencyRateString());
             }
             storeConversionRates(conversionRates);
+            mConversionRates = conversionRates;
 
             responseBody.close();
             return null;
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error fetching conversion rates", e);
-            return "Failed to fetch conversion rates.";
+            return mContext.getString(R.string.failed_to_fetch_conversion_rates);
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Error parsing conversion rates to JSON", e);
-            return "Received unexpected conversion rate data.";
+            return mContext.getString(R.string.unexpected_conversion_rate_data);
         } catch (NumberFormatException e) {
             Log.e(LOG_TAG, "Error converting JSON string to number", e);
-            return "Received invalid conversion rates.";
+            return mContext.getString(R.string.invalid_conversion_rates);
         }
     }
 
@@ -135,22 +128,15 @@ public class FetchConversionRatesTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String errorMessage) {
         super.onPostExecute(errorMessage);
 
-        boolean isError = errorMessage != null;
-        String statusMessage = isError ? errorMessage : "Updated.";
-        mUpdateTextSwitcher.setText(statusMessage);
-        clearUpdateStatusAfterDelay(!isError);
+        if (errorMessage == null) {
+            mUpdateListener.onConversionRatesUpdated(mConversionRates);
+        } else {
+            mUpdateListener.onUpdateFailed(errorMessage);
+        }
     }
 
-    private void clearUpdateStatusAfterDelay(final boolean resetStatusText) {
-        Runnable timerRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mUpdateButton.setEnabled(true);
-                if (resetStatusText) {
-                    mUpdateTextSwitcher.setText("");
-                }
-            }
-        };
-        mTimerHandler.postDelayed(timerRunnable, STATUS_RESET_DELAY_MS);
+    public interface OnConversionRatesFetchedListener {
+        public void onConversionRatesUpdated(List<ConversionRate> conversionRates);
+        public void onUpdateFailed(String errorMessage);
     }
 }
