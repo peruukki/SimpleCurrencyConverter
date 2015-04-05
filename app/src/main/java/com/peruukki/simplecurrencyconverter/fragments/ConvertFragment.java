@@ -104,12 +104,9 @@ public class ConvertFragment extends Fragment {
     }
 
     private void addFocusChangedListener(EditText editText) {
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    updateLostFocusAmount((EditText) v);
-                }
+        editText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                updateLostFocusAmount((EditText) v);
             }
         });
     }

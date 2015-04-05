@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.peruukki.simplecurrencyconverter.R;
 import com.peruukki.simplecurrencyconverter.adapters.ConversionRateListAdapter;
@@ -81,13 +80,10 @@ public class CurrenciesFragment extends ListFragment
         Animation out = AnimationUtils.loadAnimation(context, android.R.anim.fade_out);
         updateText.setInAnimation(in);
         updateText.setOutAnimation(out);
-        updateText.setFactory(new ViewSwitcher.ViewFactory() {
-            @Override
-            public View makeView() {
-                TextView textView = new TextView(context);
-                textView.setGravity(Gravity.CENTER);
-                return textView;
-            }
+        updateText.setFactory(() -> {
+            TextView textView = new TextView(context);
+            textView.setGravity(Gravity.CENTER);
+            return textView;
         });
 
         return rootView;
@@ -218,12 +214,7 @@ public class CurrenciesFragment extends ListFragment
     }
 
     private void clearUpdateStatusAfterDelay(final TextSwitcher statusText) {
-        Runnable timerRunnable = new Runnable() {
-            @Override
-            public void run() {
-                statusText.setText("");
-            }
-        };
+        Runnable timerRunnable = () -> statusText.setText("");
         mTimerHandler.postDelayed(timerRunnable, STATUS_RESET_DELAY_MS);
     }
 
