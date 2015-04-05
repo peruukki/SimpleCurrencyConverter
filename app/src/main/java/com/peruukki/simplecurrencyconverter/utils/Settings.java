@@ -1,11 +1,11 @@
-package com.simplecurrencyconverter.utils;
+package com.peruukki.simplecurrencyconverter.utils;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.simplecurrencyconverter.R;
-import com.simplecurrencyconverter.models.ConversionRate;
+import com.peruukki.simplecurrencyconverter.R;
+import com.peruukki.simplecurrencyconverter.models.ConversionRate;
 
 public class Settings {
 

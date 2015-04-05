@@ -1,4 +1,4 @@
-package com.simplecurrencyconverter;
+package com.peruukki.simplecurrencyconverter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -11,10 +11,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.simplecurrencyconverter.adapters.TabAdapter;
-import com.simplecurrencyconverter.fragments.ConvertFragment;
-import com.simplecurrencyconverter.fragments.CurrenciesFragment;
-import com.simplecurrencyconverter.utils.Tab;
+import com.peruukki.simplecurrencyconverter.adapters.TabAdapter;
+import com.peruukki.simplecurrencyconverter.fragments.ConvertFragment;
+import com.peruukki.simplecurrencyconverter.fragments.CurrenciesFragment;
+import com.peruukki.simplecurrencyconverter.utils.Tab;
 
 import java.util.ArrayList;
 import java.util.List;

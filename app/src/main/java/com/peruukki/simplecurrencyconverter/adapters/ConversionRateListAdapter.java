@@ -1,4 +1,4 @@
-package com.simplecurrencyconverter.adapters;
+package com.peruukki.simplecurrencyconverter.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.simplecurrencyconverter.R;
-import com.simplecurrencyconverter.db.ConverterDbHelper;
-import com.simplecurrencyconverter.models.ConversionRate;
+import com.peruukki.simplecurrencyconverter.R;
+import com.peruukki.simplecurrencyconverter.db.ConverterDbHelper;
+import com.peruukki.simplecurrencyconverter.models.ConversionRate;
 
 /**
  * A {@link android.support.v4.widget.CursorAdapter} that renders
- * {@link com.simplecurrencyconverter.models.ConversionRate} items.
+ * {@link com.peruukki.simplecurrencyconverter.models.ConversionRate} items.
  */
 public class ConversionRateListAdapter extends CursorAdapter {
 

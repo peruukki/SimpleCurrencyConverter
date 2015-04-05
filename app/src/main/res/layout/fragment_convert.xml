@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    tools:context="com.simplecurrencyconverter.fragments.ConvertFragment">
+    tools:context="com.peruukki.simplecurrencyconverter.fragments.ConvertFragment">
 
     <TextView
         android:id="@+id/first_currency_label"

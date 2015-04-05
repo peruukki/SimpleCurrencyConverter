@@ -1,4 +1,4 @@
-package com.simplecurrencyconverter;
+package com.peruukki.simplecurrencyconverter;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

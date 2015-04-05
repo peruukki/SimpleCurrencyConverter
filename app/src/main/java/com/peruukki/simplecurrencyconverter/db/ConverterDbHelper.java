@@ -1,4 +1,4 @@
-package com.simplecurrencyconverter.db;
+package com.peruukki.simplecurrencyconverter.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.simplecurrencyconverter.db.ConverterContract.ConversionRateEntry;
-import com.simplecurrencyconverter.models.ConversionRate;
+import com.peruukki.simplecurrencyconverter.db.ConverterContract.ConversionRateEntry;
+import com.peruukki.simplecurrencyconverter.models.ConversionRate;
 
 public class ConverterDbHelper extends SQLiteOpenHelper {
 
@@ -27,7 +27,7 @@ public class ConverterDbHelper extends SQLiteOpenHelper {
     private static final String DROP = "DROP TABLE IF EXISTS ";
 
     /**
-     * Returns a {@link com.simplecurrencyconverter.models.ConversionRate} instance from given
+     * Returns a {@link com.peruukki.simplecurrencyconverter.models.ConversionRate} instance from given
      * database cursor.
      *
      * @param cursor  database cursor pointing to a table row

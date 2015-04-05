@@ -1,4 +1,4 @@
-package com.simplecurrencyconverter.fragments;
+package com.peruukki.simplecurrencyconverter.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.simplecurrencyconverter.R;
-import com.simplecurrencyconverter.models.ConversionRate;
-import com.simplecurrencyconverter.utils.Settings;
+import com.peruukki.simplecurrencyconverter.R;
+import com.peruukki.simplecurrencyconverter.models.ConversionRate;
+import com.peruukki.simplecurrencyconverter.utils.Settings;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;

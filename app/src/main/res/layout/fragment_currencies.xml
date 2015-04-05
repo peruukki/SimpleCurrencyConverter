@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context="com.simplecurrencyconverter.fragments.CurrenciesFragment">
+    tools:context="com.peruukki.simplecurrencyconverter.fragments.CurrenciesFragment">
 
     <ListView
         android:id="@android:id/list"

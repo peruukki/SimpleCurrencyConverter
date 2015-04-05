@@ -1,12 +1,12 @@
-package com.simplecurrencyconverter.network;
+package com.peruukki.simplecurrencyconverter.network;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.simplecurrencyconverter.R;
-import com.simplecurrencyconverter.models.ConversionRate;
+import com.peruukki.simplecurrencyconverter.R;
+import com.peruukki.simplecurrencyconverter.models.ConversionRate;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.ResponseBody;

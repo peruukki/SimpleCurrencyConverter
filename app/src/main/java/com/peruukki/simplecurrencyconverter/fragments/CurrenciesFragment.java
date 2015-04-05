@@ -1,4 +1,4 @@
-package com.simplecurrencyconverter.fragments;
+package com.peruukki.simplecurrencyconverter.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -24,13 +24,13 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.simplecurrencyconverter.R;
-import com.simplecurrencyconverter.adapters.ConversionRateListAdapter;
-import com.simplecurrencyconverter.db.ConverterContract;
-import com.simplecurrencyconverter.db.ConverterDbHelper;
-import com.simplecurrencyconverter.models.ConversionRate;
-import com.simplecurrencyconverter.network.FetchConversionRatesTask;
-import com.simplecurrencyconverter.utils.Settings;
+import com.peruukki.simplecurrencyconverter.R;
+import com.peruukki.simplecurrencyconverter.adapters.ConversionRateListAdapter;
+import com.peruukki.simplecurrencyconverter.db.ConverterContract;
+import com.peruukki.simplecurrencyconverter.db.ConverterDbHelper;
+import com.peruukki.simplecurrencyconverter.models.ConversionRate;
+import com.peruukki.simplecurrencyconverter.network.FetchConversionRatesTask;
+import com.peruukki.simplecurrencyconverter.utils.Settings;
 
 import java.util.List;
 

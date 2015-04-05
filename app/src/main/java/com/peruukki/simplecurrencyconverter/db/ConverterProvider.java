@@ -1,11 +1,11 @@
-package com.simplecurrencyconverter.db;
+package com.peruukki.simplecurrencyconverter.db;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.simplecurrencyconverter.db.ConverterContract.ConversionRateEntry;
+import com.peruukki.simplecurrencyconverter.db.ConverterContract.ConversionRateEntry;
 
 /**
  * A {@link android.content.ContentProvider} that provides updated conversion rates from the database.

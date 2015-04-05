@@ -1,10 +1,10 @@
-package com.simplecurrencyconverter.models;
+package com.peruukki.simplecurrencyconverter.models;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
 
-import com.simplecurrencyconverter.db.ConverterContract;
-import com.simplecurrencyconverter.db.ConverterContract.ConversionRateEntry;
+import com.peruukki.simplecurrencyconverter.db.ConverterContract;
+import com.peruukki.simplecurrencyconverter.db.ConverterContract.ConversionRateEntry;
 
 import java.util.Arrays;
 import java.util.List;

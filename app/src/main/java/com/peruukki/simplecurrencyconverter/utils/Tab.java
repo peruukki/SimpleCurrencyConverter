@@ -1,4 +1,4 @@
-package com.simplecurrencyconverter.utils;
+package com.peruukki.simplecurrencyconverter.utils;
 
 import android.support.v4.app.Fragment;
 

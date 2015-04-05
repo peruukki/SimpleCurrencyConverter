@@ -1,11 +1,11 @@
-package com.simplecurrencyconverter.db;
+package com.peruukki.simplecurrencyconverter.db;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
 
 public abstract class ConverterContract {
 
-    private static final String CONTENT_AUTHORITY = "com.simplecurrencyconverter";
+    private static final String CONTENT_AUTHORITY = "com.peruukki.simplecurrencyconverter";
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
