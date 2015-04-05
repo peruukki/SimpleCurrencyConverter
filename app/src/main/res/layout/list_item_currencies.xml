@@ -17,12 +17,12 @@
         android:layout_weight="1"
         android:gravity="end"
         />
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:text="@string/rate_separator"
+        android:src="@drawable/ic_swap_horiz_black_18dp"
         />
     <TextView
         android:id="@+id/list_item_second_currency"
