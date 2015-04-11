@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:orientation="horizontal"
-    android:background="@drawable/background_selector"
+    android:background="@drawable/list_item_background_selector"
     >
     <TextView
         android:id="@+id/list_item_first_currency"
@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="end"
+        android:textColor="@color/text_color_selector"
         tools:text="8.4462 HKD"
         />
     <ImageView
@@ -32,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="start"
+        android:textColor="@color/text_color_selector"
         tools:text="1 EUR"
         />
 </LinearLayout>

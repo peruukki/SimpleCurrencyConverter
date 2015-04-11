@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="blue_green">#22018675</color>
+    <color name="white">#ffffff</color>
+
+    <color name="grey_300">#e0e0e0</color>
+
+    <color name="green_500">#4caf50</color>
+    <color name="green_700">#388e3c</color>
+
+    <color name="lime_500">#cddc39</color>
+    <color name="lime_300">#dce775</color>
 </resources>

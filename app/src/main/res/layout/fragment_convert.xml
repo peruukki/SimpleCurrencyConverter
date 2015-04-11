@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_marginTop="@dimen/item_vertical_margin_small"
         tools:text="HKD"
         />
 
@@ -21,7 +22,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/first_currency_label"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:hint="@string/edit_amount_default"
         android:inputType="numberDecimal" />
 
@@ -30,6 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/first_currency_amount"
+        android:layout_marginTop="@dimen/item_vertical_margin_large"
         tools:text="EUR"
         />
 
