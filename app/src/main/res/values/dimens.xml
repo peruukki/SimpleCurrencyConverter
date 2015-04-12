@@ -9,6 +9,7 @@
     <dimen name="item_vertical_margin_larger">32dp</dimen>
 
     <dimen name="button_padding_horizontal">24dp</dimen>
+    <dimen name="button_padding_vertical">16dp</dimen>
 
-    <dimen name="divider_height">1dp</dimen>
+    <dimen name="divider_height">0.5dp</dimen>
 </resources>

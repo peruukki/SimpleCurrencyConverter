@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/green_500</item>
         <item name="colorPrimaryDark">@color/green_700</item>
         <item name="colorAccent">@color/lime_500</item>
+        <item name="android:windowBackground">@color/white</item>
         <item name="android:textColor">@drawable/default_text_color</item>
     </style>
 
@@ -14,6 +15,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/item_vertical_margin_larger</item>
         <item name="android:layout_marginBottom">@dimen/item_vertical_margin_small</item>
+        <item name="android:paddingTop">@dimen/button_padding_vertical</item>
+        <item name="android:paddingBottom">@dimen/button_padding_vertical</item>
         <item name="android:paddingLeft">@dimen/button_padding_horizontal</item>
         <item name="android:paddingRight">@dimen/button_padding_horizontal</item>
         <item name="android:background">@drawable/button_background_selector</item>
