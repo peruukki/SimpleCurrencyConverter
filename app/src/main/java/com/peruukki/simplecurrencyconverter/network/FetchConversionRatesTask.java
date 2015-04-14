@@ -47,7 +47,7 @@ public class FetchConversionRatesTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
         Uri uri = Uri.parse("https://query.yahooapis.com/v1/public/yql").buildUpon()
-            .appendQueryParameter("q", "select * from yahoo.finance.xchange where pair in (" + getCurrencyPairsForApiQuery() + ")")
+            .appendQueryParameter("q", "select Name, Rate from yahoo.finance.xchange where pair in (" + getCurrencyPairsForApiQuery() + ")")
             .appendQueryParameter("format", "json")
             .appendQueryParameter("env", "store://datatables.org/alltableswithkeys")
             .appendQueryParameter("callback", "")
