@@ -849,3 +849,24 @@ section #title .credits.right {
     display: none;
   }
 }
+
+/*
+ * Custom additions
+ */
+.screenshots {
+  text-align: center;
+}
+.screenshot {
+  margin: 1em 0;
+}
+.screenshot.left {
+  float: left;
+}
+.screenshot.right {
+  float: right;
+}
+@media print, screen and (max-width: 640px) {
+  .screenshot.left, .screenshot.right {
+    float: none;
+  }
+}
