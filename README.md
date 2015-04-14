@@ -1,9 +1,9 @@
 SimpleCurrencyConverter
 =======================
 
-Convert between South Korean wons and euros, as easily as possible.
+Convert between a few Asian currencies and euros, as easily as possible.
 
-See the [GitHub page](http://peruukki.github.com/SimpleCurrencyConverter) for more details.
+See the [GitHub page](http://peruukki.github.io/SimpleCurrencyConverter/) for more details.
 
 ## Development setup
 
@@ -17,3 +17,8 @@ more information.
 
 This project uses the `swap horiz` icon from
 [Material Design Icons](https://github.com/google/material-design-icons).
+
+## Currency rates
+
+The currency rates are fetched from the
+[Yahoo Finance API](https://developer.yahoo.com/yql/console/?q=show%20tables&env=store://datatables.org/alltableswithkeys#h=select+*+from+yahoo.finance.xchange+where+pair+in+%28%22EURKRW%22%29).
