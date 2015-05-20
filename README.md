@@ -1,7 +1,7 @@
 SimpleCurrencyConverter
 =======================
 
-Convert between a few Asian currencies and euros, as easily as possible.
+Convert between a few currencies and euros, as easily as possible.
 
 See the [GitHub page](http://peruukki.github.io/SimpleCurrencyConverter/) for more details.
 

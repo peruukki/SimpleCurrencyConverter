@@ -15,6 +15,7 @@ import java.util.List;
 public class ConversionRate {
 
     private static ConversionRate[] CONVERSION_RATES = {
+        new ConversionRate("EUR", "CZK", 27.31f),
         new ConversionRate("EUR", "KRW", 1207.31f),
         new ConversionRate("EUR", "HKD", 8.41f),
         new ConversionRate("EUR", "MOP", 8.66f),
