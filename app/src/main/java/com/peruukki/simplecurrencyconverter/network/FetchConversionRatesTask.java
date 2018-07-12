@@ -46,11 +46,8 @@ public class FetchConversionRatesTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
         OkHttpClient client = new OkHttpClient();
-        Uri uri = Uri.parse("https://query.yahooapis.com/v1/public/yql").buildUpon()
-            .appendQueryParameter("q", "select Name, Rate from yahoo.finance.xchange where pair in (" + getCurrencyPairsForApiQuery() + ")")
-            .appendQueryParameter("format", "json")
-            .appendQueryParameter("env", "store://datatables.org/alltableswithkeys")
-            .appendQueryParameter("callback", "")
+        Uri uri = Uri.parse("https://free.currencyconverterapi.com/api/v5/convert").buildUpon()
+            .appendQueryParameter("q", getCurrencyPairsForApiQuery())
             .build();
 
         try {
@@ -92,28 +89,30 @@ public class FetchConversionRatesTask extends AsyncTask<Void, Void, String> {
         StringBuilder currencyPairs = new StringBuilder();
         for (ConversionRate conversionRate : ConversionRate.ALL) {
             if (!conversionRate.equals(ConversionRate.ALL.get(0))) {
-                currencyPairs.append(", ");
+                currencyPairs.append(",");
             }
-            currencyPairs.append("'")
-                .append(conversionRate.getFixedCurrency())
-                .append(conversionRate.getVariableCurrency())
-                .append("'");
+            currencyPairs.append(conversionRateToApiKeyName(conversionRate));
         }
         return currencyPairs.toString();
     }
 
+    private String conversionRateToApiKeyName(ConversionRate conversionRate) {
+        return conversionRate.getFixedCurrency() + "_" + conversionRate.getVariableCurrency();
+    }
+
     private List<ConversionRate> parseConversionRates(String responseBody) throws JSONException {
         JSONObject responseJson = new JSONObject(responseBody);
-        JSONArray rates = responseJson.getJSONObject("query")
-            .getJSONObject("results")
-            .getJSONArray("rate");
+        JSONObject results = responseJson.getJSONObject("results");
 
         List<ConversionRate> conversionRates = new ArrayList<>();
-        for (int i = 0; i < rates.length(); i++) {
-            JSONObject rate = rates.getJSONObject(i);
-            String[] currencies = rate.getString("Name").split("/");
-            Float conversionRate = Float.valueOf(rate.getString("Rate"));
-            conversionRates.add(new ConversionRate(currencies[0], currencies[1], conversionRate));
+        for (ConversionRate conversionRate : ConversionRate.ALL) {
+            JSONObject rate = results.getJSONObject(conversionRateToApiKeyName(conversionRate));
+            Float rateValue = Float.valueOf(rate.getString("val"));
+            conversionRates.add(new ConversionRate(
+                conversionRate.getFixedCurrency(),
+                conversionRate.getVariableCurrency(),
+                rateValue
+            ));
         }
         return conversionRates;
     }

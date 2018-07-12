@@ -21,4 +21,4 @@ This project uses the `swap horiz` icon from
 ## Currency rates
 
 The currency rates are fetched from the
-[Yahoo Finance API](https://developer.yahoo.com/yql/console/?q=show%20tables&env=store://datatables.org/alltableswithkeys#h=select+*+from+yahoo.finance.xchange+where+pair+in+%28%22EURKRW%22%29).
+[Free Currency Converter API](https://free.currencyconverterapi.com/).
