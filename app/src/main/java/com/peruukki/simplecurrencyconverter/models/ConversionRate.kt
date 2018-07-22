@@ -29,7 +29,7 @@ class ConversionRate
          * The value of one unit of the fixed currency in the variable currency. It is equal to
          * the conversion rate of the two currencies.
          */
-        val fixedCurrencyInVariableCurrencyRate: Float?) {
+        val fixedCurrencyInVariableCurrencyRate: Float) {
 
     /**
      * The value of one unit of the variable currency in the fixed currency. It is equal to
@@ -41,17 +41,15 @@ class ConversionRate
      * A string representation of the variable currency value that equals one unit of the
      * fixed currency.
      */
-    val variableCurrencyRateString: String
-        get() = fixedCurrencyInVariableCurrencyRate!!.toString() + " " + variableCurrency
+    val variableCurrencyRateString = "$fixedCurrencyInVariableCurrencyRate $variableCurrency"
 
     /**
      * A string representation of one unit of the fixed currency.
      */
-    val fixedCurrencyRateString: String
-        get() = "1 $fixedCurrency"
+    val fixedCurrencyRateString = "1 $fixedCurrency"
 
     init {
-        variableCurrencyInFixedCurrencyRate = 1 / fixedCurrencyInVariableCurrencyRate!!
+        variableCurrencyInFixedCurrencyRate = 1 / fixedCurrencyInVariableCurrencyRate
     }
 
     /**
@@ -65,8 +63,7 @@ class ConversionRate
         values.put(ConversionRateEntry.COLUMN_VARIABLE_CURRENCY, variableCurrency)
         values.put(ConversionRateEntry.COLUMN_CONVERSION_RATE, fixedCurrencyInVariableCurrencyRate)
 
-        val whereClause = ConversionRateEntry.COLUMN_FIXED_CURRENCY + "=?" + " AND " +
-                ConversionRateEntry.COLUMN_VARIABLE_CURRENCY + "=?"
+        val whereClause = "${ConversionRateEntry.COLUMN_FIXED_CURRENCY}=? AND ${ConversionRateEntry.COLUMN_VARIABLE_CURRENCY}=?"
         val whereArgs = arrayOf(fixedCurrency, variableCurrency)
         contentResolver.update(ConverterContract.BASE_CONTENT_URI, values, whereClause, whereArgs)
     }
