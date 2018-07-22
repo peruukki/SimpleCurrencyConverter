@@ -104,7 +104,7 @@ public class ConvertFragmentTest extends ActivityInstrumentationTestCase2<MainAc
 
 
     private void resetCurrencies() {
-        Settings.writeConversionRate(mMainActivity, mConversionRate);
+        Settings.INSTANCE.writeConversionRate(mMainActivity, mConversionRate);
         mMainActivity.runOnUiThread(mMainActivity::onCurrenciesSelected);
     }
 }
