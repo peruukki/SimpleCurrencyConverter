@@ -11,7 +11,6 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.ResponseBody;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -87,8 +86,8 @@ public class FetchConversionRatesTask extends AsyncTask<Void, Void, String> {
 
     private String getCurrencyPairsForApiQuery() {
         StringBuilder currencyPairs = new StringBuilder();
-        for (ConversionRate conversionRate : ConversionRate.ALL) {
-            if (!conversionRate.equals(ConversionRate.ALL.get(0))) {
+        for (ConversionRate conversionRate : ConversionRate.getAllRates()) {
+            if (!conversionRate.equals(ConversionRate.getAllRates().get(0))) {
                 currencyPairs.append(",");
             }
             currencyPairs.append(conversionRateToApiKeyName(conversionRate));
@@ -105,7 +104,7 @@ public class FetchConversionRatesTask extends AsyncTask<Void, Void, String> {
         JSONObject results = responseJson.getJSONObject("results");
 
         List<ConversionRate> conversionRates = new ArrayList<>();
-        for (ConversionRate conversionRate : ConversionRate.ALL) {
+        for (ConversionRate conversionRate : ConversionRate.getAllRates()) {
             JSONObject rate = results.getJSONObject(conversionRateToApiKeyName(conversionRate));
             Float rateValue = Float.valueOf(rate.getString("val"));
             conversionRates.add(new ConversionRate(

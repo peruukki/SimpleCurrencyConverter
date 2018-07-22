@@ -23,7 +23,7 @@ class ConverterDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         db.execSQL(createTableSql)
 
         // Insert initial conversion rates
-        for (conversionRate in ConversionRate.ALL) {
+        for (conversionRate in ConversionRate.allRates) {
             val values = ContentValues()
             values.put(ConversionRateEntry.COLUMN_FIXED_CURRENCY, conversionRate.fixedCurrency)
             values.put(ConversionRateEntry.COLUMN_VARIABLE_CURRENCY, conversionRate.variableCurrency)

@@ -11,7 +11,7 @@ public class Settings {
 
     public static ConversionRate readConversionRate(Activity activity) {
         SharedPreferences preferences = activity.getPreferences(Context.MODE_PRIVATE);
-        ConversionRate defaultRate = ConversionRate.DEFAULT;
+        ConversionRate defaultRate = ConversionRate.getDefaultRate();
 
         String fixedCurrency = preferences.getString(activity.getString(R.string.fixed_currency_key),
             defaultRate.getFixedCurrency());
