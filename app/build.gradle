@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
@@ -26,10 +25,6 @@ android {
     lintOptions {
         abortOnError false
     }
-}
-
-retrolambda {
-    javaVersion JavaVersion.VERSION_1_7
 }
 
 dependencies {
