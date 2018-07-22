@@ -31,17 +31,9 @@ class FetchConversionRatesTask
 (private val mContext: Context, private val mUpdateListener: OnConversionRatesFetchedListener) : AsyncTask<Void, Void, String>() {
     private var mConversionRates: List<ConversionRate> = ArrayList()
 
-    private val currencyPairsForApiQuery: String
-        get() {
-            val currencyPairs = StringBuilder()
-            for (conversionRate in ConversionRate.allRates) {
-                if (conversionRate != ConversionRate.allRates[0]) {
-                    currencyPairs.append(",")
-                }
-                currencyPairs.append(conversionRateToApiKeyName(conversionRate))
-            }
-            return currencyPairs.toString()
-        }
+    private val currencyPairsForApiQuery = ConversionRate.allRates
+                .map { conversionRateToApiKeyName(it) }
+                .joinToString(",")
 
     override fun doInBackground(vararg params: Void): String? {
         val client = OkHttpClient()
@@ -94,17 +86,11 @@ class FetchConversionRatesTask
         val responseJson = JSONObject(responseBody)
         val results = responseJson.getJSONObject("results")
 
-        val conversionRates = ArrayList<ConversionRate>()
-        for (conversionRate in ConversionRate.allRates) {
+        return ConversionRate.allRates.map { conversionRate ->
             val rate = results.getJSONObject(conversionRateToApiKeyName(conversionRate))
             val rateValue = java.lang.Float.valueOf(rate.getString("val"))
-            conversionRates.add(ConversionRate(
-                    conversionRate.fixedCurrency,
-                    conversionRate.variableCurrency,
-                    rateValue
-            ))
+            ConversionRate(conversionRate.fixedCurrency, conversionRate.variableCurrency, rateValue)
         }
-        return conversionRates
     }
 
     private fun storeConversionRates(conversionRates: List<ConversionRate>) {
