@@ -202,8 +202,8 @@ class CurrenciesFragment : ListFragment(), View.OnClickListener, LoaderManager.L
 
         private val LOG_TAG = CurrenciesFragment::class.java.simpleName
 
-        private val CONVERSION_RATES_LOADER_ID = 0
+        private const val CONVERSION_RATES_LOADER_ID = 0
 
-        private val STATUS_RESET_DELAY_MS: Long = 1000
+        private const val STATUS_RESET_DELAY_MS: Long = 1000
     }
 }
