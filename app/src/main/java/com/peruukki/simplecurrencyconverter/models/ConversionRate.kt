@@ -35,7 +35,7 @@ class ConversionRate
      * The value of one unit of the variable currency in the fixed currency. It is equal to
      * the inverse of the conversion rate.
      */
-    val variableCurrencyInFixedCurrencyRate: Float?
+    val variableCurrencyInFixedCurrencyRate = 1 / fixedCurrencyInVariableCurrencyRate
 
     /**
      * A string representation of the variable currency value that equals one unit of the
@@ -47,10 +47,6 @@ class ConversionRate
      * A string representation of one unit of the fixed currency.
      */
     val fixedCurrencyRateString = "1 $fixedCurrency"
-
-    init {
-        variableCurrencyInFixedCurrencyRate = 1 / fixedCurrencyInVariableCurrencyRate
-    }
 
     /**
      * Updates the conversion rate in the database.

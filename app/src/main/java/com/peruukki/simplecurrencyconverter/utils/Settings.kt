@@ -17,9 +17,9 @@ object Settings {
         val variableCurrency = preferences.getString(activity.getString(R.string.variable_currency_key),
                 defaultRate.variableCurrency)
         val rate = preferences.getFloat(activity.getString(R.string.conversion_rate_key),
-                defaultRate.fixedCurrencyInVariableCurrencyRate!!)
+                defaultRate.fixedCurrencyInVariableCurrencyRate)
 
-        return ConversionRate(fixedCurrency!!, variableCurrency!!, rate)
+        return ConversionRate(fixedCurrency, variableCurrency, rate)
     }
 
     fun writeConversionRate(activity: Activity, conversionRate: ConversionRate) {
@@ -28,7 +28,7 @@ object Settings {
         editor.putString(activity.getString(R.string.fixed_currency_key), conversionRate.fixedCurrency)
         editor.putString(activity.getString(R.string.variable_currency_key), conversionRate.variableCurrency)
         editor.putFloat(activity.getString(R.string.conversion_rate_key),
-                conversionRate.fixedCurrencyInVariableCurrencyRate!!)
+                conversionRate.fixedCurrencyInVariableCurrencyRate)
         editor.commit()
     }
 

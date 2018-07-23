@@ -118,7 +118,7 @@ class ConvertFragment : Fragment() {
             else
                 mConversionRate!!.variableCurrencyInFixedCurrencyRate
             val inputAmount = parseDecimal(changedText.toString())
-            val outputAmount = multiplier!! * inputAmount
+            val outputAmount = multiplier * inputAmount
             formattedOutputAmount = formatAmount(outputAmount, mOutputAmountFormatter)
         }
         editTextToChange.setText(formattedOutputAmount)
