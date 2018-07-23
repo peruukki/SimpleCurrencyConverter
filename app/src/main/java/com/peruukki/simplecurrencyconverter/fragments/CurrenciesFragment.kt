@@ -57,10 +57,8 @@ class CurrenciesFragment : ListFragment(), View.OnClickListener, LoaderManager.L
 
         val context = activity
         val updateText = rootView.findViewById(R.id.textswitcher_update_conversion_rates) as TextSwitcher
-        val `in` = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
-        val out = AnimationUtils.loadAnimation(context, android.R.anim.fade_out)
-        updateText.inAnimation = `in`
-        updateText.outAnimation = out
+        updateText.inAnimation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
+        updateText.outAnimation = AnimationUtils.loadAnimation(context, android.R.anim.fade_out)
         updateText.setFactory {
             val textView = TextView(context)
             textView.gravity = Gravity.CENTER
