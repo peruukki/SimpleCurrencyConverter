@@ -110,7 +110,7 @@ class ConvertFragment : Fragment() {
         mAllowAmountUpdate = false
 
         val formattedOutputAmount: String
-        if (changedText.toString().length == 0) {
+        if (changedText.toString().isEmpty()) {
             formattedOutputAmount = ""
         } else {
             val multiplier = if (isFixedCurrency)
@@ -128,7 +128,7 @@ class ConvertFragment : Fragment() {
         val amount = parseDecimal(editText.text.toString())
         val formattedOutputAmount = formatAmount(amount, mInputAmountFormatter)
         // Empty the other amount too if the amount that lost focus was emptied
-        mAllowAmountUpdate = formattedOutputAmount.length == 0
+        mAllowAmountUpdate = formattedOutputAmount.isEmpty()
         editText.setText(formattedOutputAmount)
     }
 
